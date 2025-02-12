@@ -1,30 +1,11 @@
 {
 	"info": {
-		"_postman_id": "4f82377c-59ae-47ca-becb-257c4102e249",
+		"_postman_id": "e93c2ca9-f1c8-4e42-ab48-d3ce6f36f8bb",
 		"name": "Cliente",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
-		"_exporter_id": "39138575"
+		"_exporter_id": "29072219"
 	},
 	"item": [
-		{
-			"name": "Listar Clientes",
-			"request": {
-				"method": "GET",
-				"header": [],
-				"url": {
-					"raw": "localhost:8080/cliente/listarTodos",
-					"host": [
-						"localhost"
-					],
-					"port": "8080",
-					"path": [
-						"cliente",
-						"listarTodos"
-					]
-				}
-			},
-			"response": []
-		},
 		{
 			"name": "Cadastrar Cliente",
 			"request": {
@@ -32,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"numeroCNH\": \"987654321\",\r\n    \"validadeCNH\": \"20/10/2028\",\r\n    \"pessoa\": {\r\n        \"nome\": \"Guilherme Muller\",\r\n        \"dataDeNascimento\": \"01/08/2002\",\r\n        \"cpf\": \"565.216.108-64\",\r\n        \"email\": \"guilherme@email.com\",\r\n        \"telefone\": \"(11)98765-4321\",\r\n        \"endereco\": {\r\n            \"cep\": \"01001-333\",\r\n            \"logradouro\": \"Rua 1\",\r\n            \"numero\": 123,\r\n            \"complemento\": \"Apt 101\",\r\n            \"bairro\": \"Centro\",\r\n            \"cidade\": \"São Paulo\",\r\n            \"estado\": \"SP\",\r\n            \"pais\": \"Brasil\"\r\n        }\r\n    }\r\n}",
+					"raw": "{\r\n    \"numeroCNH\": \"1234569\",\r\n    \"validadeCNH\": \"2025-02-11T14:35:00.000Z\",\r\n    \"pessoa\": {\r\n        \"nome\": \"teste 12\",\r\n        \"cpf\": \"753.472.680-85\",\r\n        \"dataDeNascimento\": \"2025-02-11T14:35:00.000Z\",\r\n        \"telefone\": \"(11)12345-6789\",\r\n        \"email\": \"teste13@teste.com\",\r\n        \"endereco\": {\r\n            \"cep\": \"00000-000\",\r\n            \"logradouro\": \"teste rua\",\r\n            \"numero\": \"2\",\r\n            \"fkCidade\": 1\r\n        }\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -40,14 +21,50 @@
 					}
 				},
 				"url": {
-					"raw": "localhost:8080/cliente/cadastrar",
+					"raw": "{{local}}/cliente/cadastrar",
 					"host": [
-						"localhost"
+						"{{local}}"
 					],
-					"port": "8080",
 					"path": [
 						"cliente",
 						"cadastrar"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Buscar Cliente por Id",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/cliente/buscarId/15",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"cliente",
+						"buscarId",
+						"15"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Todos Cliente",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/cliente/listarTodos",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"cliente",
+						"listarTodos"
 					]
 				}
 			},

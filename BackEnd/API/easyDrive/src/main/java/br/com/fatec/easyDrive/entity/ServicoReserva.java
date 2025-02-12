@@ -1,0 +1,58 @@
+package br.com.fatec.easyDrive.entity;
+
+import jakarta.persistence.CascadeType;
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToOne;
+import jakarta.persistence.Table;
+
+@Table(name = "tb_servico_reserva")
+@Entity (name = "ServicoReserva")
+public class ServicoReserva {
+	@Id  @GeneratedValue(strategy = GenerationType.IDENTITY)
+	@Column(name = "id") 
+	private Long id;
+    
+	@Column(name = "nome") 
+    private String nome;
+	
+	@Column(name = "valor") 
+    private Double valor;
+	
+    @ManyToOne(cascade = CascadeType.PERSIST)
+    @JoinColumn(name = "fk_reserva", nullable = false)
+    private Reserva reserva;
+
+	public String getNome() {
+		return nome;
+	}
+
+	public void setNome(String nome) {
+		this.nome = nome;
+	}
+
+	public Double getValor() {
+		return valor;
+	}
+
+	public void setValor(Double valor) {
+		this.valor = valor;
+	}
+
+	public Reserva getReserva() {
+		return reserva;
+	}
+
+	public void setReserva(Reserva reserva) {
+		this.reserva = reserva;
+	}
+
+	public Long getId() {
+		return id;
+	}
+
+}

@@ -1,0 +1,47 @@
+{
+	"info": {
+		"_postman_id": "c039b645-d0dd-47ed-ba67-e778197cda11",
+		"name": "Dominios",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29072219"
+	},
+	"item": [
+		{
+			"name": "Listar Estados",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/dominio/estados",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"dominio",
+						"estados"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Listar Cidades Por Estado",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/dominio/cidades/2",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"dominio",
+						"cidades",
+						"2"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
