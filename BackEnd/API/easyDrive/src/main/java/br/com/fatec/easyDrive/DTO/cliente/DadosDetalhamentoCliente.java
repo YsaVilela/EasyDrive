@@ -4,17 +4,15 @@ import java.time.LocalDate;
 
 import br.com.fatec.easyDrive.DTO.pessoa.DadosDetalhamentoPessoa;
 import br.com.fatec.easyDrive.entity.Cliente;
-import br.com.fatec.easyDrive.enumerator.PlanoAssinaturaEnum;
-import br.com.fatec.easyDrive.enumerator.StatusEnum;
 
 public record DadosDetalhamentoCliente(
         Long id,
         String numeroCNH,
         LocalDate validadeCNH,
         DadosDetalhamentoPessoa pessoa,
-        PlanoAssinaturaEnum plano,
+        String plano,
         Long pontuacao,
-        StatusEnum status
+        String status
 ) {
     public DadosDetalhamentoCliente(Cliente cliente) {
         this(
@@ -22,9 +20,9 @@ public record DadosDetalhamentoCliente(
             cliente.getNumeroCNH(),
             cliente.getValidadeCNH(),
             new DadosDetalhamentoPessoa(cliente.getPessoa()),
-            cliente.getPlanoAssinatura(),
+            cliente.getPlanoAssinatura().getDescricao(),
             cliente.getPontuacao(),
-            cliente.getStatus()
+            cliente.getStatus().getDescricao()
         );
     }
 }

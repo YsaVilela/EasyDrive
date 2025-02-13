@@ -16,58 +16,57 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-import br.com.fatec.easyDrive.DTO.cliente.DadosCliente;
-import br.com.fatec.easyDrive.DTO.cliente.DadosDetalhamentoCliente;
-import br.com.fatec.easyDrive.service.ClienteService;
+import br.com.fatec.easyDrive.DTO.veiculo.DadosDetalhamentoVeiculo;
+import br.com.fatec.easyDrive.DTO.veiculo.DadosVeiculo;
+import br.com.fatec.easyDrive.service.VeiculoService;
 import jakarta.transaction.Transactional;
 import jakarta.validation.Valid;
 
 @RestController
-@RequestMapping("cliente")
+@RequestMapping("veiculo")
 @CrossOrigin(origins = "*", maxAge = 3600)
-public class ClienteController {
-	
+public class VeiculoController {
 	@Autowired
-	private ClienteService service;
+	private VeiculoService service;
 
 	@PostMapping("cadastrar")
-	public ResponseEntity<DadosDetalhamentoCliente> cadastrar(
-			@RequestBody @Valid DadosCliente dados) {
+	public ResponseEntity<DadosDetalhamentoVeiculo> cadastrar(
+			@RequestBody @Valid DadosVeiculo dados) {
 		return ResponseEntity.status(HttpStatus.CREATED).body(service.cadastrar(dados));
 	}
-
+	
 	@GetMapping("/buscarId/{id}")
-	public ResponseEntity<DadosDetalhamentoCliente> buscarId(@PathVariable Long id) {
+	public ResponseEntity<DadosDetalhamentoVeiculo> buscarId(@PathVariable Long id) {
 		return ResponseEntity.ok(service.buscarPorId(id));
 	}
-
+	
 	@GetMapping("listarTodos")
-	public ResponseEntity<Page<DadosDetalhamentoCliente>> listarTodos(
+	public ResponseEntity<Page<DadosDetalhamentoVeiculo>> listarTodos(
 			@PageableDefault(size = 10) Pageable paginacao) {
 		return ResponseEntity.ok(service.listarTodos(paginacao));
 	}
-
-	@PutMapping("atualizar/{id}")
+	
+	@PutMapping("atualizar/{idVeiculo}")
 	@Transactional
-	public ResponseEntity<DadosDetalhamentoCliente> atualizar(
-			@RequestBody @Valid DadosCliente dados, @PathVariable Long id) {
-		return ResponseEntity.ok(service.atualizar(dados, id));
+	public ResponseEntity<DadosDetalhamentoVeiculo> atualizar(
+			@RequestBody @Valid DadosVeiculo dados, @PathVariable Long idVeiculo) {
+		return ResponseEntity.ok(service.atualizar(dados, idVeiculo));
 	}
 	
 	@PutMapping("suspender/{id}")
 	@Transactional
-	public ResponseEntity<DadosDetalhamentoCliente> suspender(
+	public ResponseEntity<DadosDetalhamentoVeiculo> suspender(
 			@PathVariable Long id) {
 		return ResponseEntity.ok(service.suspender(id));
 	}
 	
 	@PutMapping("ativar/{id}")
 	@Transactional
-	public ResponseEntity<DadosDetalhamentoCliente> ativar(
+	public ResponseEntity<DadosDetalhamentoVeiculo> ativar(
 			@PathVariable Long id) {
 		return ResponseEntity.ok(service.ativar(id));
 	}
-
+	
 	@DeleteMapping("deletar/{id}")
 	@Transactional
 	public ResponseEntity<HttpStatus> deletar(@PathVariable Long id) {

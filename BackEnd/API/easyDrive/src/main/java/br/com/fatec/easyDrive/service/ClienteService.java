@@ -1,14 +1,12 @@
 package br.com.fatec.easyDrive.service;
 
 import java.util.List;
-import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import br.com.fatec.easyDrive.DTO.cliente.DadosAtualizarCliente;
 import br.com.fatec.easyDrive.DTO.cliente.DadosCliente;
 import br.com.fatec.easyDrive.DTO.cliente.DadosDetalhamentoCliente;
 import br.com.fatec.easyDrive.entity.Cliente;
@@ -57,7 +55,7 @@ public class ClienteService {
 	public DadosDetalhamentoCliente buscarPorId(Long id) {
 		Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> 
 			new NotFoundException("Cliente com id " + id + " não encontrado")
-		);
+	);
 
 		return new DadosDetalhamentoCliente(cliente);
 	}
@@ -66,9 +64,9 @@ public class ClienteService {
 		return clienteRepository.findAll(paginacao).map(DadosDetalhamentoCliente::new);
 	}
 
-	public Optional<DadosDetalhamentoCliente> atualizar(@Valid DadosAtualizarCliente dados) {	
-		Cliente cliente = clienteRepository.findById(dados.id()).orElseThrow(() -> 
-			new NotFoundException("Cliente com id " + dados.id() + " não encontrado")
+	public DadosDetalhamentoCliente atualizar(@Valid DadosCliente dados, Long idCliente) {	
+		Cliente cliente = clienteRepository.findById(idCliente).orElseThrow(() -> 
+			new NotFoundException("Cliente com id " + idCliente + " não encontrado")
 		);
 
 		Pessoa pessoa = pessoaService.atualizar(dados.pessoa(), cliente.getPessoa().getId());
@@ -77,7 +75,7 @@ public class ClienteService {
 		cliente.setValidadeCNH(dados.validadeCNH());
 		clienteRepository.save(cliente);
 	
-		return clienteRepository.findById(cliente.getId()).map(DadosDetalhamentoCliente::new);
+		return new DadosDetalhamentoCliente(cliente);
 	}
 	
 	public DadosDetalhamentoCliente suspender(Long id) {
@@ -107,7 +105,7 @@ public class ClienteService {
 			new NotFoundException("Cliente com id " + id + " não encontrado")
 		);
 		
-		List<Reserva> reservas = reservaRepository.getByClienteId(id);
+		List<Reserva> reservas = reservaRepository.findByClienteId(id);
 		if(!reservas.isEmpty()) {
 			throw new InvalidDataException ("Não é possivel excluir cliente que já realizou reserva");		
 		}

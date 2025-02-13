@@ -1,15 +1,19 @@
 package br.com.fatec.easyDrive.DTO.veiculo;
 
 import br.com.fatec.easyDrive.entity.Veiculo;
+import br.com.fatec.easyDrive.enumerator.TipoCombustivelEnum;
 
 public record DadosDetalhamentoVeiculo(
         Long id,
         String placa,
         String modelo,
         String marca,
-        int ano,
+        Integer ano,
+        Long quilometragem,
         String categoria,
         String cor,
+        TipoCombustivelEnum tipoCombustivel,
+        Double valorDiaria,
         String status
 ) {
     public DadosDetalhamentoVeiculo(Veiculo veiculo) {
@@ -19,9 +23,12 @@ public record DadosDetalhamentoVeiculo(
             veiculo.getModelo(),
             veiculo.getMarca(),
             veiculo.getAno(),
-            veiculo.getCategoria(),
+            veiculo.getQuilometragem(),
+            veiculo.getCategoria().getDescricao(),
             veiculo.getCor(),
-            veiculo.getStatus()
+            veiculo.getTipoCombustivel(),
+            veiculo.getValorDiaria(),
+            veiculo.getStatus().getDescricao()
         );
     }
 }

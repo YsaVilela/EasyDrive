@@ -1,6 +1,7 @@
 package br.com.fatec.easyDrive.repository;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
@@ -17,6 +18,12 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long>{
 	void deleteAllAndResetSequence();
 
 	@Query("SELECT r FROM Reserva r WHERE r.cliente.id = :idCliente")
-	List<Reserva> getByClienteId(@Param("idCliente") Long idCliente);
+	List<Reserva> findByClienteId(@Param("idCliente") Long idCliente);
+	
+	@Query("SELECT r FROM Reserva r WHERE r.veiculo.id = :idVeiculo")
+	List<Reserva> findByVeiculoId(@Param("idVeiculo") Long idVeiculo);
+	
+	@Query("SELECT r FROM Reserva r WHERE r.veiculo.id = :idVeiculo AND r.status = :status")
+	Optional<Reserva> findByVeiculoAtivo(@Param("idVeiculo") Long idVeiculo, @Param("status") String status);
 
 }

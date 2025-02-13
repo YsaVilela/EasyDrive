@@ -1,8 +1,7 @@
 package br.com.fatec.easyDrive.DTO.veiculo;
 
-import br.com.fatec.easyDrive.DTO.endereco.DadosEndereco;
+import br.com.fatec.easyDrive.enumerator.CategoriaEnum;
 import br.com.fatec.easyDrive.enumerator.TipoCombustivelEnum;
-import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Positive;
@@ -22,10 +21,12 @@ public record DadosVeiculo(
     @Positive(message = "O ano deve ser maior que zero")
     Integer ano,
     
+    @NotNull(message = "Ano é obrigatório")
+    @Positive(message = "O ano deve ser maior que zero")
     Long quilometragem,
 
-    @NotBlank(message = "Categoria é obrigatória")
-    String categoria,
+    @NotNull(message = "Categoria é obrigatória")
+    CategoriaEnum categoria,
 
     @NotBlank(message = "Cor é obrigatória")
     String cor,
@@ -33,7 +34,8 @@ public record DadosVeiculo(
     @NotNull(message = "Tipo do Combustivel é obrigatório")
     TipoCombustivelEnum tipoCombustivel,
     
-	@Valid  
-	DadosEndereco endereco
+    @NotNull(message = "O valor da diária é obrigatório")
+    @Positive(message = "O valor da diária deve ser maior que zero")
+    Double valorDiaria
 ) {
 }

@@ -18,7 +18,6 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import br.com.fatec.easyDrive.DTO.cliente.DadosAtualizarCliente;
 import br.com.fatec.easyDrive.DTO.cliente.DadosCliente;
 import br.com.fatec.easyDrive.DTO.cliente.DadosDetalhamentoCliente;
 import br.com.fatec.easyDrive.DTO.endereco.DadosEndereco;
@@ -137,9 +136,9 @@ public class ClienteControllerTest {
 		
 		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 1L);
 		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", data, "(11)12345-6789", "teste@teste.com", dadosEndereco);
-		DadosAtualizarCliente dadosCliente = new DadosAtualizarCliente(idCliente, "123456789", data, dadosPessoa);
+		DadosCliente dadosCliente = new DadosCliente("123456789", data, dadosPessoa);
 
-		ResponseEntity<?> response = restTemplate.exchange("/cliente/atualizar", HttpMethod.PUT,
+		ResponseEntity<?> response = restTemplate.exchange("/cliente/atualizar/" + idCliente, HttpMethod.PUT,
 				new HttpEntity<>(dadosCliente), Object.class);
 
 		assertEquals(HttpStatus.OK, response.getStatusCode());
@@ -152,9 +151,9 @@ public class ClienteControllerTest {
 		
 		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 1L);
 		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", data, "(11)12345-6789", "teste@teste.com", dadosEndereco);
-		DadosAtualizarCliente dadosCliente = new DadosAtualizarCliente(2000L, "123456789", data, dadosPessoa);
+		DadosCliente dadosCliente = new DadosCliente("123456789", data, dadosPessoa);
 
-		ResponseEntity<?> response = restTemplate.exchange("/cliente/atualizar", HttpMethod.PUT,
+		ResponseEntity<?> response = restTemplate.exchange("/cliente/atualizar/2000", HttpMethod.PUT,
 				new HttpEntity<>(dadosCliente), Object.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
