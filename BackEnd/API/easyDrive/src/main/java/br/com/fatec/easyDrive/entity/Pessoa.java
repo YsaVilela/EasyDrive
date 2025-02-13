@@ -1,7 +1,6 @@
 package br.com.fatec.easyDrive.entity;
 
 import java.time.LocalDate;
-import java.util.Date;
 
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
@@ -31,7 +30,7 @@ public class  Pessoa {
 	private String cpf;
 	
 	@Column(name = "data_nascimento") 
-	private Date dataDeNascimento;
+	private LocalDate dataDeNascimento;
 	
 	@Column(name = "telefone") 
 	private String telefone;
@@ -42,7 +41,7 @@ public class  Pessoa {
 	@Column(name = "data_cadastro") 
 	private LocalDate dataCadastro;
 	
-	@OneToOne(cascade = CascadeType.PERSIST)
+	@OneToOne(cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "fk_endereco")
 	protected Endereco endereco;
 

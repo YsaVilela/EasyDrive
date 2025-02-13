@@ -1,10 +1,13 @@
 package br.com.fatec.easyDrive.DTO.pessoa;
 
-import java.util.Date;
+import java.time.LocalDate;
+
+import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.com.fatec.easyDrive.DTO.endereco.DadosEndereco;
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.PastOrPresent;
 import jakarta.validation.constraints.Pattern;
 
 public record DadosPessoa(
@@ -13,8 +16,10 @@ public record DadosPessoa(
 		
 		@Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$", message = "Cpf inválido")
 		String cpf,
-
-		Date dataDeNascimento,
+		
+	    @PastOrPresent(message = "A data de nascimento não pode ser uma data futura")
+	    @JsonFormat(pattern = "dd/MM/yyyy")
+	    LocalDate dataDeNascimento,
 
 		@NotBlank(message = "Telefone é obrigatório") 
 		@Pattern(regexp = "^\\(\\d{2}\\)\\d{5}-\\d{4}$", message = "Telefone inválido") 

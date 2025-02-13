@@ -1,12 +1,13 @@
-package br.com.fatec.easyDrive.entity;
+package br.com.fatec.easyDrive.DTO.pessoa;
 
 import java.time.LocalDate;
-import java.util.Date;
+
+import br.com.fatec.easyDrive.entity.Pessoa;
 
 public record DadosDetalhamentoPessoa(
 			String nome,
 			String cpf,
-			Date dataDeNascimento,
+			LocalDate dataDeNascimento,
 			String telefone,
 			String email,
 			LocalDate dataCadastro,
