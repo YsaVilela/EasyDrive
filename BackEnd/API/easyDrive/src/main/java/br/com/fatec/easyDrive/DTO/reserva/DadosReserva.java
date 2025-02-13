@@ -1,26 +1,35 @@
 package br.com.fatec.easyDrive.DTO.reserva;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.util.List;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
+import br.com.fatec.easyDrive.enumerator.ServicoEnum;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.Positive;
 
 public record DadosReserva(
     
 	@NotNull(message = "Data inicio da reserva é obrigatório")
-    LocalDate dataInicio,
+    @FutureOrPresent(message = "A data de inicio da reserva não pode ser passada")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")    
+	LocalDateTime dataInicio,
 
     @NotNull(message = "Data prevista para o fim da reserva é obrigatório")
-    LocalDate dataPrevistaFim,
-
-    @NotNull(message = "O valor do orçamento é obrigatório")
-    @Positive(message = "O valor do orçamento deve ser maior que zero")
-    Double orcamento,
+	@FutureOrPresent(message = "A data final da reserva não pode ser passada")
+    @JsonFormat(pattern = "dd/MM/yyyy HH:mm")    
+	LocalDateTime dataPrevistaFim,
 
     @NotNull(message = "ID do Cliente é obrigatório")
     Long fkCliente,
 
     @NotNull(message = "ID do Veículo é obrigatório")
-    Long fkVeiculo
+    Long fkVeiculo,
+    
+    @NotNull(message = "Indicar se há orçamento prévio é obrigatório")
+    boolean orcamentoPrevio,
+    
+    List<ServicoEnum> servicos
 ) {
 }

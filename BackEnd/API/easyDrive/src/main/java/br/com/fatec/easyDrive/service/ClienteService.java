@@ -55,7 +55,7 @@ public class ClienteService {
 	public DadosDetalhamentoCliente buscarPorId(Long id) {
 		Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> 
 			new NotFoundException("Cliente com id " + id + " não encontrado")
-	);
+		);
 
 		return new DadosDetalhamentoCliente(cliente);
 	}

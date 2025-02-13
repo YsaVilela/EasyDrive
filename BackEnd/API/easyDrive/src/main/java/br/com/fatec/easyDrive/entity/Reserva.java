@@ -1,18 +1,25 @@
 package br.com.fatec.easyDrive.entity;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
+import br.com.fatec.easyDrive.enumerator.StatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Entity
 @Table(name = "tb_reserva")
+@Getter
+@Setter
 public class Reserva {
 
     @Id
@@ -21,16 +28,19 @@ public class Reserva {
     private Long id;
 
     @Column(name = "data_inicio")
-    private LocalDate dataInicio;
+    private LocalDateTime dataInicio;
     
     @Column(name = "data_prevista_fim")
-    private LocalDate dataPrevistaFim;
+    private LocalDateTime dataPrevistaFim;
 
     @Column(name = "data_fim")
-    private LocalDate dataFim;
+    private LocalDateTime dataFim;
 
     @Column(name = "orcamento")
     private Double orcamento;
+    
+    @Column(name = "orcamento_final")
+    private Double orcamentoFinal;
     
     @Column(name = "valor_final")
     private Double valorFinal;
@@ -38,8 +48,9 @@ public class Reserva {
     @Column(name = "valor_pago")
     private Double valorPago;
 
+    @Enumerated(EnumType.STRING)
     @Column(name = "status")
-    private String status;
+    private StatusEnum status;
 
     @ManyToOne
     @JoinColumn(name = "fk_cliente")
@@ -48,81 +59,5 @@ public class Reserva {
     @ManyToOne
     @JoinColumn(name = "fk_veiculo")
     private Veiculo veiculo;
-
-	public LocalDate getDataInicio() {
-		return dataInicio;
-	}
-
-	public void setDataInicio(LocalDate dataInicio) {
-		this.dataInicio = dataInicio;
-	}
-
-	public LocalDate getDataPrevistaFim() {
-		return dataPrevistaFim;
-	}
-
-	public void setDataPrevistaFim(LocalDate dataPrevistaFim) {
-		this.dataPrevistaFim = dataPrevistaFim;
-	}
-
-	public LocalDate getDataFim() {
-		return dataFim;
-	}
-
-	public void setDataFim(LocalDate dataFim) {
-		this.dataFim = dataFim;
-	}
-
-	public Double getOrcamento() {
-		return orcamento;
-	}
-
-	public void setOrcamento(Double orcamento) {
-		this.orcamento = orcamento;
-	}
-
-	public Double getValorFinal() {
-		return valorFinal;
-	}
-
-	public void setValorFinal(Double valorFinal) {
-		this.valorFinal = valorFinal;
-	}
-
-	public String getStatus() {
-		return status;
-	}
-
-	public void setStatus(String status) {
-		this.status = status;
-	}
-
-	public Cliente getCliente() {
-		return cliente;
-	}
-
-	public void setCliente(Cliente cliente) {
-		this.cliente = cliente;
-	}
-
-	public Veiculo getVeiculo() {
-		return veiculo;
-	}
-
-	public void setVeiculo(Veiculo veiculo) {
-		this.veiculo = veiculo;
-	}
-
-	public Long getId() {
-		return id;
-	}
-
-	public Double getValorPago() {
-		return valorPago;
-	}
-
-	public void setValorPago(Double valorPago) {
-		this.valorPago = valorPago;
-	}
 	
 }

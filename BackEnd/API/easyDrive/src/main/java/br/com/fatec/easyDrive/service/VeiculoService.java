@@ -47,7 +47,7 @@ public class VeiculoService {
 	
 	public DadosDetalhamentoVeiculo buscarPorId(Long idVeiculo) {
 		Veiculo veiculo = veiculoRepository.findById(idVeiculo).orElseThrow(() -> 
-			new NotFoundException("Cliente com id " + idVeiculo + " não encontrado.")
+			new NotFoundException("Veículo com id " + idVeiculo + " não encontrado.")
 		);
 		
 		return new DadosDetalhamentoVeiculo(veiculo);
@@ -62,7 +62,7 @@ public class VeiculoService {
 			new NotFoundException("Veículo com id " + idVeiculo + " não encontrado")
 		);
 		
-		Optional<Reserva> reserva =  reservaRepository.findByVeiculoAtivo(idVeiculo, StatusEnum.ATIVO.getDescricao());
+		Optional<Reserva> reserva =  reservaRepository.findByVeiculoIdAndReservaStatus(idVeiculo, StatusEnum.EM_ANDAMENTO.getDescricao());
 		
 		if(reserva.isPresent()) {
 			new NotFoundException("Veículo " + idVeiculo + " não pode ser atualizado pois está presente em uma reserva ativa.");

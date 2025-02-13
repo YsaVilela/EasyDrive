@@ -92,6 +92,7 @@ CREATE TABLE tb_reserva (
     data_prevista_fim TIMESTAMP not null,
     data_fim TIMESTAMP,
     orcamento FLOAT not null,
+    orcamento_final FLOAT not null,
     valor_final FLOAT,
     valor_pago FLOAT,
     status VARCHAR(45) not null

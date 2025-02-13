@@ -6,9 +6,9 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.com.fatec.easyDrive.DTO.pessoa.DadosPessoa;
 import jakarta.validation.Valid;
+import jakarta.validation.constraints.FutureOrPresent;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.PastOrPresent;
 
 public record DadosCliente(
 
@@ -16,7 +16,7 @@ public record DadosCliente(
     String numeroCNH,
 
     @NotNull(message = "Validade da CNH é obrigatória")
-    @PastOrPresent(message = "A validade da CNH não pode ser uma data futura")
+    @FutureOrPresent(message = "A validade da CNH não pode ser uma data passada")
     @JsonFormat(pattern = "dd/MM/yyyy")    
     LocalDate validadeCNH,
 
