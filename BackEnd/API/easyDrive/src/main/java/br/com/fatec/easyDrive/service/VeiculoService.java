@@ -62,7 +62,7 @@ public class VeiculoService {
 			new NotFoundException("Veículo com id " + idVeiculo + " não encontrado")
 		);
 		
-		Optional<Reserva> reserva =  reservaRepository.findByVeiculoIdAndReservaStatus(idVeiculo, StatusEnum.EM_ANDAMENTO.getDescricao());
+		Optional<Reserva> reserva =  reservaRepository.findByVeiculoIdAndReservaStatus(idVeiculo, StatusEnum.EM_ANDAMENTO);
 		
 		if(reserva.isPresent()) {
 			new NotFoundException("Veículo " + idVeiculo + " não pode ser atualizado pois está presente em uma reserva ativa.");

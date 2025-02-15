@@ -52,7 +52,7 @@ public class PessoaService {
 		pessoa.setTelefone(dados.telefone());
 		pessoa.setEmail(dados.email());
 		pessoa.setDataCadastro(LocalDate.now());
-		pessoa.setEndereco(enderecoRepository.getReferenceById(endereco.getId()));
+		pessoa.setEndereco(endereco);
 		pessoaRepository.save(pessoa);
 		
 		return pessoaRepository.getReferenceById(pessoa.getId());

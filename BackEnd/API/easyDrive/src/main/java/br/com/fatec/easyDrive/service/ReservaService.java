@@ -49,6 +49,8 @@ public class ReservaService {
 			new NotFoundException("Veiculo com id " + dados.fkVeiculo() + " não encontrado.")
 		);
 		
+		validarDatas(dados.dataInicio(), dados.dataPrevistaFim());
+		
 		Long diasDeReserva = ChronoUnit.DAYS.between(dados.dataInicio(), (dados.dataPrevistaFim())) + 1;
 		Double valorReserva = calcularValorReserva(dados, veiculo, diasDeReserva);
 		
@@ -135,7 +137,7 @@ public class ReservaService {
 	}
 	
 	public Double calcularValorServico(ServicoEnum servico, Long diasDeReserva, Double valorDiaria) {
-		return valorDiaria * (valorDiaria * servico.getDesconto()/100);
+		return valorDiaria * (valorDiaria * servico.getValor()/100);
 	}
 
 	
@@ -145,13 +147,9 @@ public class ReservaService {
 		return valorComDesconto;
 	}
 	
-	public void validarDatas(LocalDateTime dataInicio, LocalDateTime dataFinal){
-		if(dataInicio.isBefore(LocalDateTime.now())){
-			throw new InvalidDataException ("Data início da reserva não pode ser menor que a data atual");		
-		}
-		
+	public void validarDatas(LocalDateTime dataInicio, LocalDateTime dataFinal){	
 		if(dataInicio.isAfter(dataFinal)) {
-			throw new InvalidDataException ("Data início da reserva não pode ser depois do final");		
+			throw new InvalidDataException ("Data início da reserva não pode ser após data final");		
 		}
 	}
 	
@@ -188,11 +186,4 @@ public class ReservaService {
 	    }
 	}
 	
-	public void deletar(Long id) {
-		Reserva reserva = reservaRepository.findById(id).orElseThrow(() -> 
-			new NotFoundException("Reserva com id " + id + " não encontrado")
-		);
-		
-		reservaRepository.delete(reserva);
-	}
 }

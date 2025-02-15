@@ -26,7 +26,7 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long>{
 	List<Reserva> findByVeiculoId(@Param("idVeiculo") Long idVeiculo);
 	
 	@Query("SELECT r FROM Reserva r WHERE r.veiculo.id = :idVeiculo AND r.status = :status")
-	Optional<Reserva> findByVeiculoIdAndReservaStatus(@Param("idVeiculo") Long idVeiculo, @Param("status") String status);
+	Optional<Reserva> findByVeiculoIdAndReservaStatus(@Param("idVeiculo") Long idVeiculo, @Param("status") StatusEnum status);
 	
 	@Query("SELECT r FROM Reserva r WHERE r.cliente.id = :idCliente AND r.status = :status")
 	Optional<Reserva> findByClienteIdAndReservaStatus(

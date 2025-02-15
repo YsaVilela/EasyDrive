@@ -1,5 +1,6 @@
 package br.com.fatec.easyDrive.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
@@ -48,11 +49,12 @@ public class ClienteControllerTest {
 	
 	
 	Long iniciarCliente() {
-		LocalDate data = LocalDate.now().minusDays(20);
+		LocalDate dataDeNascimento = LocalDate.now().minusYears(20);
+		LocalDate dataValidadeCNH = LocalDate.now().plusDays(20);
 
 		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 1L);
-		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", data, "(11)12345-6789", "teste@teste.com", dadosEndereco);
-		DadosCliente dadosCliente = new DadosCliente("123456789", data, dadosPessoa);
+		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", dataDeNascimento, "(11)12345-6789", "teste@teste.com", dadosEndereco);
+		DadosCliente dadosCliente = new DadosCliente("123456789", dataValidadeCNH, dadosPessoa);
 		
 		ResponseEntity<DadosDetalhamentoCliente> response =  restTemplate.postForEntity("/cliente/cadastrar", dadosCliente, DadosDetalhamentoCliente.class);
 		
@@ -70,11 +72,12 @@ public class ClienteControllerTest {
 	@Test
 	@DisplayName("Deve retornar um created quando criado com sucesso")
 	void criarCliente() {
-		LocalDate data = LocalDate.now().minusDays(20);
+		LocalDate dataDeNascimento = LocalDate.now().minusYears(20);
+		LocalDate dataValidadeCNH = LocalDate.now().plusDays(20);
 		
 		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 1L);
-		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", data, "(11)12345-6789", "teste@teste.com", dadosEndereco);
-		DadosCliente dadosCliente = new DadosCliente("123456789", data, dadosPessoa);
+		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", dataDeNascimento, "(11)12345-6789", "teste@teste.com", dadosEndereco);
+		DadosCliente dadosCliente = new DadosCliente("123456789", dataValidadeCNH, dadosPessoa);
 
 		ResponseEntity<?> response = restTemplate.postForEntity("/cliente/cadastrar",
 				dadosCliente, Object.class);
@@ -85,16 +88,112 @@ public class ClienteControllerTest {
 	@Test
 	@DisplayName("Deve retornar 400 quando tentar cadastrar com idCidade inexistente")
 	void criarClienteComCidadeInexistente() {
-		LocalDate data = LocalDate.now().minusDays(20);
+		LocalDate dataDeNascimento = LocalDate.now().minusYears(20);
+		LocalDate dataValidadeCNH = LocalDate.now().plusDays(20);
 		
 		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 500000L);
-		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", data, "(11)12345-6789", "teste@teste.com", dadosEndereco);
-		DadosCliente dadosCliente = new DadosCliente("123456789", data, dadosPessoa);
+		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", dataDeNascimento, "(11)12345-6789", "teste@teste.com", dadosEndereco);
+		DadosCliente dadosCliente = new DadosCliente("123456789", dataValidadeCNH, dadosPessoa);
 
 		ResponseEntity<?> response = restTemplate.postForEntity("/cliente/cadastrar",
 				dadosCliente, Object.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+	}
+	
+	@Test
+	@DisplayName("Deve retornar 400 quando tentar cadastrar com CPF ja cadastrado")
+	void criarClienteComCpfJaCadastrado() {
+		iniciarCliente();
+
+		LocalDate dataDeNascimento = LocalDate.now().minusYears(20);
+		LocalDate dataValidadeCNH = LocalDate.now().plusDays(20);
+		
+		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 500000L);
+		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", dataDeNascimento, "(11)12345-6789", "teste1@teste.com", dadosEndereco);
+		DadosCliente dadosCliente = new DadosCliente("111111111", dataValidadeCNH, dadosPessoa);
+
+		ResponseEntity<?> response = restTemplate.postForEntity("/cliente/cadastrar",
+				dadosCliente, Object.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertThat(response.getBody().toString()).contains("Cliente já cadastrado com esse cpf");
+	}
+	
+	@Test
+	@DisplayName("Deve retornar 400 quando tentar cadastrar com email ja cadastrado")
+	void criarClienteComEmailJaCadastrado() {
+		iniciarCliente();
+
+		LocalDate dataDeNascimento = LocalDate.now().minusYears(20);
+		LocalDate dataValidadeCNH = LocalDate.now().plusDays(20);
+		
+		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 500000L);
+		DadosPessoa dadosPessoa = new DadosPessoa("teste", "389.498.600-07", dataDeNascimento, "(11)12345-6789", "teste@teste.com", dadosEndereco);
+		DadosCliente dadosCliente = new DadosCliente("111111111", dataValidadeCNH, dadosPessoa);
+
+		ResponseEntity<?> response = restTemplate.postForEntity("/cliente/cadastrar",
+				dadosCliente, Object.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertThat(response.getBody().toString()).contains("Cliente já cadastrado com esse email");
+	}
+	
+	@Test
+	@DisplayName("Deve retornar 400 quando tentar cadastrar com CNH ja cadastrado")
+	void criarClienteComCNHJaCadastrado() {
+		iniciarCliente();
+
+		LocalDate dataDeNascimento = LocalDate.now().minusYears(20);
+		LocalDate dataValidadeCNH = LocalDate.now().plusDays(20);
+		
+		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 500000L);
+		DadosPessoa dadosPessoa = new DadosPessoa("teste", "389.498.600-07", dataDeNascimento, "(11)12345-6789", "teste1@teste.com", dadosEndereco);
+		DadosCliente dadosCliente = new DadosCliente("123456789", dataValidadeCNH, dadosPessoa);
+
+		ResponseEntity<?> response = restTemplate.postForEntity("/cliente/cadastrar",
+				dadosCliente, Object.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertThat(response.getBody().toString()).contains("Cliente já cadastrado com esse número de Carteira Nacional de Habilitação(CNH)");
+	}
+	
+	@Test
+	@DisplayName("Deve retornar 400 quando tentar cadastrar com CPF invalido")
+	void criarClienteComInvalidoDigitosIguais() {
+		iniciarCliente();
+
+		LocalDate dataDeNascimento = LocalDate.now().minusYears(20);
+		LocalDate dataValidadeCNH = LocalDate.now().plusDays(20);
+		
+		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 500000L);
+		DadosPessoa dadosPessoa = new DadosPessoa("teste", "111.111.111-11", dataDeNascimento, "(11)12345-6789", "teste1@teste.com", dadosEndereco);
+		DadosCliente dadosCliente = new DadosCliente("111111111", dataValidadeCNH, dadosPessoa);
+
+		ResponseEntity<?> response = restTemplate.postForEntity("/cliente/cadastrar",
+				dadosCliente, Object.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertThat(response.getBody().toString()).contains("CPF Inválido");
+	}
+	
+	@Test
+	@DisplayName("Deve retornar 400 quando tentar cadastrar com CPF invalido")
+	void criarClienteComInvalido() {
+		iniciarCliente();
+
+		LocalDate dataDeNascimento = LocalDate.now().minusYears(20);
+		LocalDate dataValidadeCNH = LocalDate.now().plusDays(20);
+		
+		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 500000L);
+		DadosPessoa dadosPessoa = new DadosPessoa("teste", "123.465.123-11", dataDeNascimento, "(11)12345-6789", "teste1@teste.com", dadosEndereco);
+		DadosCliente dadosCliente = new DadosCliente("111111111", dataValidadeCNH, dadosPessoa);
+
+		ResponseEntity<?> response = restTemplate.postForEntity("/cliente/cadastrar",
+				dadosCliente, Object.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertThat(response.getBody().toString()).contains("CPF Inválido");
 	}
 	
 	@Test
@@ -132,11 +231,12 @@ public class ClienteControllerTest {
 	void atualizarCliente() {
 		Long idCliente = iniciarCliente();
 
-		LocalDate data = LocalDate.now().minusDays(20);
+		LocalDate dataDeNascimento = LocalDate.now().minusYears(20);
+		LocalDate dataValidadeCNH = LocalDate.now().plusDays(20);
 		
 		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 1L);
-		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", data, "(11)12345-6789", "teste@teste.com", dadosEndereco);
-		DadosCliente dadosCliente = new DadosCliente("123456789", data, dadosPessoa);
+		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", dataDeNascimento, "(11)12345-6789", "teste@teste.com", dadosEndereco);
+		DadosCliente dadosCliente = new DadosCliente("123456789", dataValidadeCNH, dadosPessoa);
 
 		ResponseEntity<?> response = restTemplate.exchange("/cliente/atualizar/" + idCliente, HttpMethod.PUT,
 				new HttpEntity<>(dadosCliente), Object.class);
@@ -147,11 +247,12 @@ public class ClienteControllerTest {
 	@Test
 	@DisplayName("Deve retornar 400 quando cliente atualizado inexistente")
 	void atualizarClienteInexistente() {
-		LocalDate data = LocalDate.now().minusDays(20);
+		LocalDate dataDeNascimento = LocalDate.now().minusYears(20);
+		LocalDate dataValidadeCNH = LocalDate.now().plusDays(20);
 		
 		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 1L);
-		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", data, "(11)12345-6789", "teste@teste.com", dadosEndereco);
-		DadosCliente dadosCliente = new DadosCliente("123456789", data, dadosPessoa);
+		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", dataDeNascimento, "(11)12345-6789", "teste@teste.com", dadosEndereco);
+		DadosCliente dadosCliente = new DadosCliente("123456789", dataValidadeCNH, dadosPessoa);
 
 		ResponseEntity<?> response = restTemplate.exchange("/cliente/atualizar/2000", HttpMethod.PUT,
 				new HttpEntity<>(dadosCliente), Object.class);

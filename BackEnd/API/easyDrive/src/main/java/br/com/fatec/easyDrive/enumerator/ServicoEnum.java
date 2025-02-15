@@ -8,27 +8,19 @@ public enum ServicoEnum {
 	TANQUE_CHEIO("Tanque Cheio na Retirada", 10);
 	
 	private String descricao;
-	private Integer desconto;
+	private Integer valor;
 	
 	private ServicoEnum(String descricao, Integer desconto) {
 		this.descricao = descricao;
-		this.desconto = desconto;
+		this.valor = desconto;
 	}
 
 	public String getDescricao() {
 		return descricao;
 	}
 
-	public void setDescricao(String descricao) {
-		this.descricao = descricao;
-	}
-
-	public Integer getDesconto() {
-		return desconto;
-	}
-
-	public void setDesconto(Integer desconto) {
-		this.desconto = desconto;
+	public Integer getValor() {
+		return valor;
 	}
 	
 }

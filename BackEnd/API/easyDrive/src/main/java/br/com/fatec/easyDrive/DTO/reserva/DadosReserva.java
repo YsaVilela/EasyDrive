@@ -27,9 +27,6 @@ public record DadosReserva(
     @NotNull(message = "ID do Veículo é obrigatório")
     Long fkVeiculo,
     
-    @NotNull(message = "Indicar se há orçamento prévio é obrigatório")
-    boolean orcamentoPrevio,
-    
     List<ServicoEnum> servicos
 ) {
 }

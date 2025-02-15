@@ -11,9 +11,13 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Getter;
+import lombok.Setter;
 
 @Table(name = "tb_pagamento")
 @Entity (name = "Pagamento")
+@Getter
+@Setter
 public class Pagamento {
 
     @Id	@GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -35,49 +39,5 @@ public class Pagamento {
     @ManyToOne(cascade = CascadeType.PERSIST)
     @JoinColumn(name = "fk_reserva", nullable = false)
     private Reserva reserva;
-
-	public Double getValor() {
-		return valor;
-	}
-
-	public void setValor(Double valor) {
-		this.valor = valor;
-	}
-
-	public FormaPagamentoEnum getFormaPagamento() {
-		return formaPagamento;
-	}
-
-	public void setFormaPagamento(FormaPagamentoEnum formaPagamento) {
-		this.formaPagamento = formaPagamento;
-	}
-
-	public String getDataPagamento() {
-		return dataPagamento;
-	}
-
-	public void setDataPagamento(String dataPagamento) {
-		this.dataPagamento = dataPagamento;
-	}
-
-	public StatusEnum getStatus() {
-		return status;
-	}
-
-	public void setStatus(StatusEnum status) {
-		this.status = status;
-	}
-
-	public Reserva getReserva() {
-		return reserva;
-	}
-
-	public void setReserva(Reserva reserva) {
-		this.reserva = reserva;
-	}
-
-	public Long getId() {
-		return id;
-	}
 
 }
