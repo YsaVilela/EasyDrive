@@ -13,7 +13,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n    \"numeroCNH\": \"1234569\",\r\n    \"validadeCNH\": \"2025-02-11T14:35:00.000Z\",\r\n    \"pessoa\": {\r\n        \"nome\": \"teste 12\",\r\n        \"cpf\": \"753.472.680-85\",\r\n        \"dataDeNascimento\": \"2025-02-11T14:35:00.000Z\",\r\n        \"telefone\": \"(11)12345-6789\",\r\n        \"email\": \"teste13@teste.com\",\r\n        \"endereco\": {\r\n            \"cep\": \"00000-000\",\r\n            \"logradouro\": \"teste rua\",\r\n            \"numero\": \"2\",\r\n            \"fkCidade\": 1\r\n        }\r\n    }\r\n}",
+					"raw": "{\r\n    \"numeroCNH\": \"123456721\",\r\n    \"validadeCNH\": \"20/02/2026\",\r\n    \"pessoa\": {\r\n        \"nome\": \"teste 1\",\r\n        \"cpf\": \"917.006.690-60\",\r\n        \"dataDeNascimento\": \"10/02/2025\",\r\n        \"telefone\": \"(11)12345-6789\",\r\n        \"email\": \"teste4@teste.com\",\r\n        \"endereco\": {\r\n            \"cep\": \"00000-000\",\r\n            \"logradouro\": \"teste rua\",\r\n            \"numero\": \"2\",\r\n            \"complemento\": \"Ap 1\",\r\n            \"bairro\": \"bairro teste\",\r\n            \"fkCidade\": 1\r\n        }\r\n    }\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -39,14 +39,14 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "{{local}}/cliente/buscarId/15",
+					"raw": "{{local}}/cliente/buscarId/3",
 					"host": [
 						"{{local}}"
 					],
 					"path": [
 						"cliente",
 						"buscarId",
-						"15"
+						"3"
 					]
 				}
 			},
@@ -65,6 +65,91 @@
 					"path": [
 						"cliente",
 						"listarTodos"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Atualizar Cliente",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"numeroCNH\": \"123456788\",\r\n    \"validadeCNH\": \"10/02/2025\",\r\n    \"pessoa\": {\r\n        \"nome\": \"teste 1\",\r\n        \"cpf\": \"753.472.680-85\",\r\n        \"dataDeNascimento\": \"10/02/2025\",\r\n        \"telefone\": \"(11)12345-6789\",\r\n        \"email\": \"teste1@teste.com\",\r\n        \"endereco\": {\r\n            \"cep\": \"00000-000\",\r\n            \"logradouro\": \"teste rua\",\r\n            \"numero\": \"2\",\r\n            \"fkCidade\": 1\r\n        }\r\n    }\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "{{local}}/cliente/atualizar/3",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"cliente",
+						"atualizar",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Suspender Cliente",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/cliente/suspender/2",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"cliente",
+						"suspender",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Ativar Cliente",
+			"request": {
+				"method": "PUT",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/cliente/ativar/2",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"cliente",
+						"ativar",
+						"2"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Deletar Cliente",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "{{local}}/cliente/deletar/2",
+					"host": [
+						"{{local}}"
+					],
+					"path": [
+						"cliente",
+						"deletar",
+						"2"
 					]
 				}
 			},
