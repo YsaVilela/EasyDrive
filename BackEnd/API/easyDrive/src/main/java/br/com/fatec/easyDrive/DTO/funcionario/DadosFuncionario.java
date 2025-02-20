@@ -1,12 +1,13 @@
 package br.com.fatec.easyDrive.DTO.funcionario;
 
+import jakarta.validation.Valid;
+import jakarta.validation.constraints.NotNull;
+
 import br.com.fatec.easyDrive.DTO.pessoa.DadosPessoa;
 import br.com.fatec.easyDrive.enumerator.CargoEnum;
-import jakarta.validation.Valid;
-import jakarta.validation.constraints.NotBlank;
 
 public record DadosFuncionario(
-	@NotBlank(message = "Cargo é obrigatório") 
+	@NotNull(message = "Cargo é obrigatório") 
 	CargoEnum cargo,
 
 	@Valid  
