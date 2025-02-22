@@ -21,8 +21,8 @@ public record DadosVeiculo(
     @Positive(message = "O ano deve ser maior que zero")
     Integer ano,
     
-    @NotNull(message = "Ano é obrigatório")
-    @Positive(message = "O ano deve ser maior que zero")
+    @NotNull(message = "Quilometragem é obrigatório")
+    @Positive(message = "A quilometragem deve ser maior que zero")
     Long quilometragem,
 
     @NotNull(message = "Categoria é obrigatória")

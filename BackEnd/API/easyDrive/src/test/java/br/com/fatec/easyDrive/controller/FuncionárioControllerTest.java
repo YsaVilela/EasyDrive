@@ -21,6 +21,7 @@ import org.springframework.test.context.junit4.SpringRunner;
 import br.com.fatec.easyDrive.DTO.endereco.DadosEndereco;
 import br.com.fatec.easyDrive.DTO.funcionario.DadosDetalhamentoFuncionario;
 import br.com.fatec.easyDrive.DTO.funcionario.DadosFuncionario;
+import br.com.fatec.easyDrive.DTO.pessoa.DadosDetalhamentoPessoa;
 import br.com.fatec.easyDrive.DTO.pessoa.DadosPessoa;
 import br.com.fatec.easyDrive.enumerator.CargoEnum;
 import br.com.fatec.easyDrive.repository.EnderecoRepository;
@@ -42,14 +43,22 @@ public class FuncionárioControllerTest {
 
 	@Autowired
 	private FuncionarioRepository funcionarioRepository;
-
-
-	Long iniciarFuncionario() {
+	
+	Long iniciarPessoa() {
 		LocalDate dataDeNascimento = LocalDate.now().minusYears(20);
 
 		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 1L);
 		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", dataDeNascimento, "(11)12345-6789", "teste@teste.com", dadosEndereco);
-		DadosFuncionario dadosFuncionario = new DadosFuncionario(CargoEnum.ATENDENTE, dadosPessoa);
+		
+		ResponseEntity<DadosDetalhamentoPessoa> response =  restTemplate.postForEntity("/pessoa/cadastrar", dadosPessoa, DadosDetalhamentoPessoa.class);
+		
+		return response.getBody().id();
+	}
+
+	Long iniciarFuncionario() {
+		Long idPessoa = iniciarPessoa();
+
+		DadosFuncionario dadosFuncionario = new DadosFuncionario(CargoEnum.ATENDENTE, idPessoa, null);
 
 		ResponseEntity<DadosDetalhamentoFuncionario> response =  restTemplate.postForEntity("/funcionario/cadastrar", dadosFuncionario, DadosDetalhamentoFuncionario.class);
 
@@ -57,7 +66,7 @@ public class FuncionárioControllerTest {
 	}
 
 	@BeforeEach
-	void finalizar() {
+	void iniciar() {
 		funcionarioRepository.deleteAllAndResetSequence();
 		pessoaRepository.deleteAllAndResetSequence();
 		enderecoRepository.deleteAllAndResetSequence();
@@ -66,11 +75,9 @@ public class FuncionárioControllerTest {
 	@Test
 	@DisplayName("Deve retornar um created quando criado com sucesso")
 	void criarFuncionario() {
-		LocalDate dataDeNascimento = LocalDate.now().minusYears(20);
+		Long idPessoa = iniciarPessoa();
 
-		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 1L);
-		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", dataDeNascimento, "(11)12345-6789", "teste@teste.com", dadosEndereco);
-		DadosFuncionario dadosFuncionario = new DadosFuncionario(CargoEnum.ATENDENTE, dadosPessoa);
+		DadosFuncionario dadosFuncionario = new DadosFuncionario(CargoEnum.ATENDENTE, idPessoa, null);
 
 		ResponseEntity<?> response =  restTemplate.postForEntity("/funcionario/cadastrar", 
 				dadosFuncionario, Object.class);
@@ -78,20 +85,18 @@ public class FuncionárioControllerTest {
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 	}
 	
-	@Test
-	@DisplayName("Deve retornar 400 quando tentar cadastrar com idCidade inexistente")
-	void criarFuncionarioComCidadeInexistente() {
-		LocalDate dataDeNascimento = LocalDate.now().minusYears(20);
-
-		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 500000L);
-		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", dataDeNascimento, "(11)12345-6789", "teste@teste.com", dadosEndereco);
-		DadosFuncionario dadosFuncionario = new DadosFuncionario(CargoEnum.ATENDENTE, dadosPessoa);
-
-		ResponseEntity<?> response =  restTemplate.postForEntity("/funcionario/cadastrar", 
-				dadosFuncionario, Object.class);
-
-		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-	}
+//	@Test
+//	@DisplayName("Deve retornar 400 quando tentar cadastrar com idCidade inexistente")
+//	void criarFuncionarioComCidadeInexistente() {
+//		Long idPessoa = iniciarPessoa();
+//		
+//		DadosFuncionario dadosFuncionario = new DadosFuncionario(CargoEnum.ATENDENTE, idPessoa, null);
+//
+//		ResponseEntity<?> response =  restTemplate.postForEntity("/funcionario/cadastrar", 
+//				dadosFuncionario, Object.class);
+//
+//		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+//	}
 
 //	@Test
 //	@DisplayName("Deve retornar 400 quando tentar cadastrar com CPF ja cadastrado")
@@ -207,7 +212,7 @@ public class FuncionárioControllerTest {
 
 		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 1L);
 		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", dataDeNascimento, "(11)12345-6789", "teste@teste.com", dadosEndereco);
-		DadosFuncionario dadosFuncionario = new DadosFuncionario(CargoEnum.ATENDENTE, dadosPessoa);
+		DadosFuncionario dadosFuncionario = new DadosFuncionario(CargoEnum.ATENDENTE, null, dadosPessoa);
 
 		ResponseEntity<?> response = restTemplate.exchange("/funcionario/atualizar/" + idFuncionario, HttpMethod.PUT,
 				new HttpEntity<>(dadosFuncionario), Object.class);
@@ -222,7 +227,7 @@ public class FuncionárioControllerTest {
 
 		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 1L);
 		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", dataDeNascimento, "(11)12345-6789", "teste@teste.com", dadosEndereco);
-		DadosFuncionario dadosFuncionario = new DadosFuncionario(CargoEnum.ATENDENTE, dadosPessoa);
+		DadosFuncionario dadosFuncionario = new DadosFuncionario(CargoEnum.ATENDENTE, null, dadosPessoa);
 
 		ResponseEntity<?> response = restTemplate.exchange("/funcionario/atualizar/2000", HttpMethod.PUT,
 				new HttpEntity<>(dadosFuncionario), Object.class);

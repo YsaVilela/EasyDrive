@@ -1,5 +1,7 @@
 package br.com.fatec.easyDrive.service;
 
+import java.time.LocalDate;
+
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,10 +26,12 @@ public class FuncionarioService {
 	private FuncionarioRepository funcionarioRepository;
 	
 	public DadosDetalhamentoFuncionario cadastrar(@Valid DadosFuncionario dados) {	
-		Pessoa pessoa = pessoaService.criarPessoa(dados.pessoa());
+		Pessoa pessoa = pessoaService.buscarPessoaPorId(dados.idPessoa());
+
 		Funcionario funcionario = new Funcionario();
 		funcionario.setPessoa(pessoa);
 		funcionario.setCargo(dados.cargo());
+		funcionario.setDataCadastro(LocalDate.now());
 		funcionario.setStatus(StatusEnum.ATIVO);
 		funcionarioRepository.save(funcionario);
 		
@@ -51,7 +55,7 @@ public class FuncionarioService {
 			new NotFoundException("Funcionário com id " + idFunciocario + " não encontrado")
 		);
 
-		Pessoa pessoa = pessoaService.atualizar(dados.pessoa(), funcionario.getPessoa().getId());
+		Pessoa pessoa = pessoaService.atualizar(dados.pessoa(), funcionario.getPessoa());
 		funcionario.setPessoa(pessoa);
 		funcionario.setCargo(dados.cargo());
 		funcionarioRepository.save(funcionario);

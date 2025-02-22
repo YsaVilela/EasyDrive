@@ -2,18 +2,21 @@ package br.com.fatec.easyDrive.service;
 
 import java.time.LocalDate;
 
+import jakarta.validation.Valid;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import br.com.fatec.easyDrive.DTO.pessoa.DadosDetalhamentoPessoa;
 import br.com.fatec.easyDrive.DTO.pessoa.DadosPessoa;
 import br.com.fatec.easyDrive.entity.Cidade;
 import br.com.fatec.easyDrive.entity.Endereco;
 import br.com.fatec.easyDrive.entity.Pessoa;
+import br.com.fatec.easyDrive.exception.InvalidDataException;
 import br.com.fatec.easyDrive.exception.NotFoundException;
 import br.com.fatec.easyDrive.repository.CidadeRepository;
 import br.com.fatec.easyDrive.repository.EnderecoRepository;
 import br.com.fatec.easyDrive.repository.PessoaRepository;
-import jakarta.validation.Valid;
 
 @Service
 public class PessoaService {
@@ -33,7 +36,8 @@ public class PessoaService {
 		);
 	}
 	
-	public Pessoa criarPessoa(@Valid DadosPessoa dados) {
+	public DadosDetalhamentoPessoa cadastrar(@Valid DadosPessoa dados) {
+		validarCadastroPessoaJaCadastrada(dados);
 		
 		Endereco endereco = new Endereco();
 		endereco.setCep(dados.endereco().cep());
@@ -55,18 +59,14 @@ public class PessoaService {
 		pessoa.setEndereco(endereco);
 		pessoaRepository.save(pessoa);
 		
-		return pessoaRepository.getReferenceById(pessoa.getId());
+		return new DadosDetalhamentoPessoa(pessoa);
 	}
 	
-	public Pessoa atualizar(@Valid DadosPessoa dados, long idPessoa) {
-		Pessoa pessoa = pessoaRepository.findById(idPessoa).orElseThrow(() -> 
-			new NotFoundException("Pessoa com id " + idPessoa + " não encontrado")
-		);
+	public Pessoa atualizar(@Valid DadosPessoa dados, Pessoa pessoa) {
+		validarCadastroPessoaJaCadastrada(dados, pessoa.getId());
 		
-		Long idEndereco = pessoa.getEndereco().getId();
-		Endereco endereco = enderecoRepository.findById(idEndereco).orElseThrow(() -> 
-			new NotFoundException("Endereco com id " + idEndereco + " não encontrado")
-		);
+//		Pessoa pessoa = buscarPessoaPorId(idPessoa);
+		Endereco endereco = pessoa.getEndereco();
 				
 		endereco.setCep(dados.endereco().cep());
 		endereco.setLogradouro(dados.endereco().logradouro());
@@ -88,4 +88,41 @@ public class PessoaService {
 		
 		return pessoaRepository.getReferenceById(pessoa.getId());
 	}
+	
+	public DadosDetalhamentoPessoa buscarPorCPF(String cpf) {
+		Pessoa pessoa = pessoaRepository.findByCpf(cpf).orElseThrow(() -> 
+			new NotFoundException("Pessoa com cpf " + cpf + " não encontrado")
+		);
+		
+		return new DadosDetalhamentoPessoa(pessoa);
+	} 
+	
+	public Pessoa buscarPessoaPorId(Long idPessoa) {
+		return pessoaRepository.findById(idPessoa).orElseThrow(() -> 
+			new NotFoundException("Pessoa com id " + idPessoa + " não encontrado")
+		);
+	}
+	
+	public void validarCadastroPessoaJaCadastrada(DadosPessoa dados) {
+		pessoaRepository.findByCpf(dados.cpf())
+		    .ifPresent(cliente -> {
+		        throw new InvalidDataException("CPF " + dados.cpf()  + " já cadastrado");
+		    });
+		
+		pessoaRepository.findByEmail(dados.email())
+		    .ifPresent(cliente -> {
+		        throw new InvalidDataException("Email " + dados.email()  + " já cadastrado");
+		    });
+	}
+	
+	public void validarCadastroPessoaJaCadastrada(DadosPessoa dados, Long idPessoa) {
+		pessoaRepository.findByCpf(dados.cpf())
+		    .filter(c -> !c.getId().equals(idPessoa))
+		    .ifPresent(c -> { throw new InvalidDataException("CPF " + dados.cpf()  + " já cadastrado");});
+		
+		pessoaRepository.findByEmail(dados.email())
+		    .filter(c -> !c.getId().equals(idPessoa))
+		    .ifPresent(c -> { throw new InvalidDataException("Email " + dados.email()  + " já cadastrado");});
+	}
+	
 }

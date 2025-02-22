@@ -1,5 +1,6 @@
 package br.com.fatec.easyDrive.service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,8 +19,6 @@ import br.com.fatec.easyDrive.exception.InvalidDataException;
 import br.com.fatec.easyDrive.exception.NotFoundException;
 import br.com.fatec.easyDrive.repository.ClienteRepository;
 import br.com.fatec.easyDrive.repository.ReservaRepository;
-import br.com.fatec.easyDrive.service.validations.cliente.cadastrar.ValidadorCadastroCliente;
-import jakarta.validation.Valid;
 
 @Service
 public class ClienteService {
@@ -33,13 +32,12 @@ public class ClienteService {
 	@Autowired
 	private ReservaRepository reservaRepository;
 	
-	@Autowired
-	private List<ValidadorCadastroCliente> validadorCadastroCliente;
-	
-	public DadosDetalhamentoCliente cadastrar(@Valid DadosCliente dados) {
-		validadorCadastroCliente.forEach(v -> v.validarCadastro(dados));
+	public DadosDetalhamentoCliente cadastrar(DadosCliente dados) {
 		
-		Pessoa pessoa = pessoaService.criarPessoa(dados.pessoa());
+		verificarClienteJaCadastrado(dados);
+		
+		Pessoa pessoa = pessoaService.buscarPessoaPorId(dados.idPessoa());
+		
 		Cliente cliente = new Cliente();
 		cliente.setPessoa(pessoa);
 		cliente.setNumeroCNH(dados.numeroCNH());
@@ -47,15 +45,14 @@ public class ClienteService {
 		cliente.setPontuacao(0L);
 		cliente.setPlanoAssinatura(PlanoAssinaturaEnum.ECONOMICO);
 		cliente.setStatus(StatusEnum.ATIVO);
+		cliente.setDataCadastro(LocalDate.now());
 		clienteRepository.save(cliente);
 		
 		return new DadosDetalhamentoCliente(cliente);
 	}
 	
 	public DadosDetalhamentoCliente buscarPorId(Long id) {
-		Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> 
-			new NotFoundException("Cliente com id " + id + " não encontrado")
-		);
+		Cliente cliente = buscarClientePorId(id);
 
 		return new DadosDetalhamentoCliente(cliente);
 	}
@@ -64,12 +61,12 @@ public class ClienteService {
 		return clienteRepository.findAll(paginacao).map(DadosDetalhamentoCliente::new);
 	}
 
-	public DadosDetalhamentoCliente atualizar(@Valid DadosCliente dados, Long idCliente) {	
-		Cliente cliente = clienteRepository.findById(idCliente).orElseThrow(() -> 
-			new NotFoundException("Cliente com id " + idCliente + " não encontrado")
-		);
+	public DadosDetalhamentoCliente atualizar(DadosCliente dados, Long idCliente) {	
+		verificarClienteJaCadastradoAtualizacao(dados, idCliente);
+		
+		Cliente cliente = buscarClientePorId(idCliente);
 
-		Pessoa pessoa = pessoaService.atualizar(dados.pessoa(), cliente.getPessoa().getId());
+		Pessoa pessoa = pessoaService.atualizar(dados.pessoa(), cliente.getPessoa());
 		cliente.setPessoa(pessoa);
 		cliente.setNumeroCNH(dados.numeroCNH());
 		cliente.setValidadeCNH(dados.validadeCNH());
@@ -79,9 +76,7 @@ public class ClienteService {
 	}
 	
 	public DadosDetalhamentoCliente suspender(Long id) {
-		Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> 
-			new NotFoundException("Cliente com id " + id + " não encontrado")
-		);
+		Cliente cliente = buscarClientePorId(id);
 		
 		cliente.setStatus(StatusEnum.SUSPENSO);
 		clienteRepository.save(cliente);
@@ -90,9 +85,7 @@ public class ClienteService {
 	}
 	
 	public DadosDetalhamentoCliente ativar(Long id) {
-		Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> 
-			new NotFoundException("Cliente com id " + id + " não encontrado")
-		);
+		Cliente cliente = buscarClientePorId(id);
 		
 		cliente.setStatus(StatusEnum.ATIVO);
 		clienteRepository.save(cliente);
@@ -101,9 +94,7 @@ public class ClienteService {
 	}
 	
 	public void deletar(Long id) {
-		Cliente cliente = clienteRepository.findById(id).orElseThrow(() -> 
-			new NotFoundException("Cliente com id " + id + " não encontrado")
-		);
+		Cliente cliente = buscarClientePorId(id);
 		
 		List<Reserva> reservas = reservaRepository.findByClienteId(id);
 		if(!reservas.isEmpty()) {
@@ -111,4 +102,43 @@ public class ClienteService {
 		}
 		clienteRepository.delete(cliente);
 	}
+	
+	public Cliente buscarClientePorId(Long id) {
+		return clienteRepository.findById(id).orElseThrow(() -> 
+			new NotFoundException("Cliente com id " + id + " não encontrado")
+		);
+	}
+	
+	public void verificarClienteJaCadastrado(DadosCliente dados) {
+		clienteRepository.findByIdPessoa(dados.idPessoa())
+		    .ifPresent(cliente -> {
+		        throw new InvalidDataException("Cliente já possui cadastro");
+		    });
+	    
+		clienteRepository.findByNumeroCNH(dados.numeroCNH())
+			.ifPresent(cliente -> {
+				throw new InvalidDataException("Cliente já cadastrado com esse número de Carteira Nacional de Habilitação(CNH)");
+			});
+	}
+	
+	public void verificarClienteJaCadastradoAtualizacao(DadosCliente dados, Long idCliente) {
+		clienteRepository.findByIdPessoa(dados.idPessoa())
+		    .filter(c -> !c.getId().equals(idCliente))
+		    .ifPresent(c -> { throw new InvalidDataException("Cliente já possui cadastro"); });
+		
+		clienteRepository.findByNumeroCNH(dados.numeroCNH())
+		    .filter(c -> !c.getId().equals(idCliente))
+		    .ifPresent(c -> { throw new InvalidDataException("Cliente já cadastrado com esse número de Carteira Nacional de Habilitação(CNH)"); });
+	}
+	
+	public void atualizarPlano(Long pontuacao, Long idCliente) {
+		Cliente cliente = buscarClientePorId(idCliente);
+		
+		cliente.setPontuacao(cliente.getPontuacao() + pontuacao);
+		cliente.setPlanoAssinatura(PlanoAssinaturaEnum.getPlanoPorPontuacao(cliente.getPontuacao()));
+		
+		clienteRepository.save(cliente);
+	}
+	
+
 }

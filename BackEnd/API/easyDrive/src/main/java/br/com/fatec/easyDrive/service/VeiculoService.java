@@ -89,8 +89,7 @@ public class VeiculoService {
 			new NotFoundException("Veículo com id " + id + " não encontrado")
 		);
 		
-		veiculo.setStatus(StatusEnum.SUSPENSO);
-		veiculoRepository.save(veiculo);
+		alterarStatus(veiculo, StatusEnum.SUSPENSO);
 
 		return new DadosDetalhamentoVeiculo(veiculo);
 	}
@@ -100,8 +99,7 @@ public class VeiculoService {
 			new NotFoundException("Veículo com id " + id + " não encontrado")
 		);
 		
-		veiculo.setStatus(StatusEnum.ATIVO);
-		veiculoRepository.save(veiculo);
+		alterarStatus(veiculo, StatusEnum.ATIVO);
 
 		return new DadosDetalhamentoVeiculo(veiculo);
 	}
@@ -116,5 +114,19 @@ public class VeiculoService {
 			throw new InvalidDataException ("Não é possivel excluir veiculo que já participou de uma reserva");		
 		}
 		veiculoRepository.delete(veiculo);
+	}
+	
+	public void alterarStatus(Veiculo veiculo, StatusEnum status) {
+		veiculo.setStatus(status);
+		veiculoRepository.save(veiculo);
+	}
+	
+	public void atualizarQuilometragem(Veiculo veiculo, Long quilometragem) {
+		if (veiculo.getQuilometragem() >= quilometragem) {  
+		    throw new InvalidDataException("A quilometragem não pode ser menor que a do início da reserva.");  
+		}
+		
+		veiculo.setQuilometragem(quilometragem);
+		veiculoRepository.save(veiculo);
 	}
 }

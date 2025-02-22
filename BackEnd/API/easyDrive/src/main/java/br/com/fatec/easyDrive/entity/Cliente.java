@@ -46,6 +46,9 @@ public class Cliente {
 	@Column(name = "status") 
 	private StatusEnum status;
 	
+	@Column(name = "data_cadastro") 
+	private LocalDate dataCadastro;
+	
 	@ManyToOne(cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "fk_pessoa")
 	protected Pessoa pessoa;

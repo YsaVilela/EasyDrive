@@ -1,6 +1,5 @@
 package br.com.fatec.easyDrive.entity;
 
-import br.com.fatec.easyDrive.enumerator.ServicoEnum;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -10,8 +9,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
 import lombok.Getter;
 import lombok.Setter;
+
+import br.com.fatec.easyDrive.enumerator.ServicoEnum;
 
 @Table(name = "tb_servico_reserva")
 @Entity (name = "ServicoReserva")

@@ -2,6 +2,9 @@ package br.com.fatec.easyDrive.entity;
 
 import br.com.fatec.easyDrive.enumerator.CargoEnum;
 import br.com.fatec.easyDrive.enumerator.StatusEnum;
+
+import java.time.LocalDate;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -25,6 +28,9 @@ public class Funcionario {
 	
 	@Column(name = "cargo") 
 	private CargoEnum cargo;
+	
+	@Column(name = "data_cadastro") 
+	private LocalDate dataCadastro;
 	
 	@Column(name = "status") 
 	private StatusEnum status;

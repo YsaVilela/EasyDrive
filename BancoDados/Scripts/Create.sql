@@ -46,6 +46,7 @@ CREATE TABLE tb_funcionario (
     id SERIAL PRIMARY KEY,
     cargo VARCHAR(255) not null,
     status VARCHAR(45) not null,
+    data_cadastro DATE not null,
     FK_PESSOA INTEGER unique not null,
         foreign key (FK_PESSOA)
     	REFERENCES tb_pessoa(id)
@@ -59,6 +60,7 @@ CREATE TABLE tb_cliente (
     numero_cnh VARCHAR(255) unique,
     validade_cnh DATE,
     status VARCHAR(45) not null,
+    data_cadastro DATE not null,
     FK_PESSOA INTEGER unique not null,
         foreign key (FK_PESSOA)
     	REFERENCES tb_pessoa(id)
@@ -89,8 +91,9 @@ CREATE TABLE tb_reserva (
         foreign key (FK_CLIENTE)
     	REFERENCES tb_cliente(id),
     data_inicio TIMESTAMP not null,
-    data_prevista_fim TIMESTAMP not null,
-    data_fim TIMESTAMP,
+    data_retirada TIMESTAMP,
+    data_fim TIMESTAMP not null,
+    data_devolucao TIMESTAMP,
     orcamento FLOAT not null,
     orcamento_final FLOAT not null,
     valor_final FLOAT,
@@ -106,8 +109,7 @@ CREATE TABLE tb_pagamento (
     	REFERENCES tb_reserva(id),
     valor FLOAT not null,
     forma_pagamento VARCHAR(45) not null,
-    data_pagamento TIMESTAMP,
-    status VARCHAR(45) not null
+    data_pagamento TIMESTAMP
 );
 
 -- Tabela: tb_servico_reserva (Tabela de relacionamento)

@@ -26,7 +26,7 @@ insert into TB_ESTADO (id, nome, sigla)
 	(24,'São Paulo','SP'),
 	(25,'Paraná','PR'),
 	(26,'Rio Grande do Sul','RS'),
-	(27,'Santa Catarina','SC')
+	(27,'Santa Catarina','SC');
 
 	
 insert into TB_CIDADE (FK_ESTADO, nome)
