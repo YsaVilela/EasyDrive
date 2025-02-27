@@ -40,6 +40,11 @@ public class ClienteController {
 	public ResponseEntity<DadosDetalhamentoCliente> buscarId(@PathVariable Long id) {
 		return ResponseEntity.ok(service.buscarPorId(id));
 	}
+	
+	@GetMapping("/buscarCpf/{cpf}")
+	public ResponseEntity<DadosDetalhamentoCliente> buscarId(@PathVariable String cpf) {
+		return ResponseEntity.ok(service.buscarPorCpf(cpf));
+	}
 
 	@GetMapping("listarTodos")
 	public ResponseEntity<Page<DadosDetalhamentoCliente>> listarTodos(

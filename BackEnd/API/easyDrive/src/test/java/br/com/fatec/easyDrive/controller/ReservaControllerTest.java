@@ -300,6 +300,130 @@ public class ReservaControllerTest {
 	}
 	
 	@Test
+	@DisplayName("Deve retornar 400 quando ao cadastrar reserva cliente tiver menos que 18 anos")
+	void cadastrarReservaClienteMenorDe18Anos() {
+		LocalDate dataDeNascimento = LocalDate.now().minusYears(15);
+
+		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 1L);
+		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", dataDeNascimento, "(11)12345-6789", "teste@teste.com", dadosEndereco);
+		
+		ResponseEntity<DadosDetalhamentoPessoa> responsePessoa =  restTemplate.postForEntity("/pessoa/cadastrar", dadosPessoa, DadosDetalhamentoPessoa.class);
+				
+		Long idPessoa = responsePessoa.getBody().id();
+		LocalDate dataValidadeCNH = LocalDate.now().plusDays(20);
+		
+		DadosCliente dadosCliente = new DadosCliente("123456789", dataValidadeCNH, idPessoa, null);
+		
+		ResponseEntity<DadosDetalhamentoCliente> responseCliente =  restTemplate.postForEntity("/cliente/cadastrar", dadosCliente, DadosDetalhamentoCliente.class);
+				
+		Long idCliente = responseCliente.getBody().id();
+		Long idVeiculo = iniciarVeiculo();
+		
+		LocalDateTime horaInicial = LocalDateTime.now().plusHours(1);
+		LocalDateTime horaFinal = LocalDateTime.now().plusDays(1);
+		List<ServicoEnum> servicos = List.of(ServicoEnum.ASSISTENCIA_24H, ServicoEnum.LIMPEZA);
+
+		DadosReserva dadosReserva = new DadosReserva(horaInicial,horaFinal, idCliente,idVeiculo, servicos);
+
+		ResponseEntity<?> response = restTemplate.postForEntity("/reserva/cadastrar",
+				dadosReserva, Object.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertThat(response.getBody().toString()).contains("É necessário ter mais de 18 anos para realizar a reserva");
+	}
+	
+	@Test
+	@DisplayName("Deve retornar 400 quando ao cadastrar reserva cliente possuir outra aguardando pagamento")
+	void cadastrarReservaClienteComPagamentoPendente() {
+		Long idCliente = iniciarCliente();
+		Long idVeiculo = iniciarVeiculo();
+		
+		Long idReserva = iniciarReserva(idCliente, idVeiculo);
+		restTemplate.exchange(
+				"/reserva/devolucao/" + idReserva,
+				HttpMethod.PUT,
+				null,
+				Object.class);
+
+		LocalDateTime horaInicial = LocalDateTime.now().plusDays(2);
+		LocalDateTime horaFinal = LocalDateTime.now().plusDays(3);
+		List<ServicoEnum> servicos = List.of(ServicoEnum.ASSISTENCIA_24H, ServicoEnum.LIMPEZA);
+
+		DadosReserva dadosReserva = new DadosReserva(horaInicial,horaFinal, idCliente,idVeiculo, servicos);
+
+		ResponseEntity<?> response = restTemplate.postForEntity("/reserva/cadastrar",
+				dadosReserva, Object.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertThat(response.getBody().toString()).contains("É necessario quitar os pagamentos pendendes para poder realizar uma nova reserva");
+	}
+	
+	@Test
+	@DisplayName("Deve retornar 400 quando ao cadastrar reserva cliente não cadastrou validade CNH")
+	void cadastrarReservaClienteNaoPossuirValidadeCNH() {
+		LocalDate dataDeNascimento = LocalDate.now().minusYears(20);
+
+		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 1L);
+		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", dataDeNascimento, "(11)12345-6789", "teste@teste.com", dadosEndereco);
+		
+		ResponseEntity<DadosDetalhamentoPessoa> responsePessoa =  restTemplate.postForEntity("/pessoa/cadastrar", dadosPessoa, DadosDetalhamentoPessoa.class);
+				
+		Long idPessoa = responsePessoa.getBody().id();
+		
+		DadosCliente dadosCliente = new DadosCliente("123456789", null, idPessoa, null);
+		
+		ResponseEntity<DadosDetalhamentoCliente> responseCliente =  restTemplate.postForEntity("/cliente/cadastrar", dadosCliente, DadosDetalhamentoCliente.class);
+				
+		Long idCliente = responseCliente.getBody().id();
+		Long idVeiculo = iniciarVeiculo();
+		
+		LocalDateTime horaInicial = LocalDateTime.now().plusHours(1);
+		LocalDateTime horaFinal = LocalDateTime.now().plusDays(1);
+		List<ServicoEnum> servicos = List.of(ServicoEnum.ASSISTENCIA_24H, ServicoEnum.LIMPEZA);
+
+		DadosReserva dadosReserva = new DadosReserva(horaInicial,horaFinal, idCliente,idVeiculo, servicos);
+
+		ResponseEntity<?> response = restTemplate.postForEntity("/reserva/cadastrar",
+				dadosReserva, Object.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertThat(response.getBody().toString()).contains("Para realizar uma reserva é obrigatório o cadastro completo da Carteira Nacional de Habilitação(CNH).");
+	}
+	
+	@Test
+	@DisplayName("Deve retornar 400 quando ao cadastrar reserva cliente não cadastrou numero CNH")
+	void cadastrarReservaClienteNaoPossuirNumeroCNH() {
+		LocalDate dataDeNascimento = LocalDate.now().minusYears(20);
+
+		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 1L);
+		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", dataDeNascimento, "(11)12345-6789", "teste@teste.com", dadosEndereco);
+		
+		ResponseEntity<DadosDetalhamentoPessoa> responsePessoa =  restTemplate.postForEntity("/pessoa/cadastrar", dadosPessoa, DadosDetalhamentoPessoa.class);
+				
+		Long idPessoa = responsePessoa.getBody().id();
+		LocalDate dataValidadeCNH = LocalDate.now().plusDays(20);
+
+		DadosCliente dadosCliente = new DadosCliente(null, dataValidadeCNH, idPessoa, null);
+		
+		ResponseEntity<DadosDetalhamentoCliente> responseCliente =  restTemplate.postForEntity("/cliente/cadastrar", dadosCliente, DadosDetalhamentoCliente.class);
+				
+		Long idCliente = responseCliente.getBody().id();
+		Long idVeiculo = iniciarVeiculo();
+		
+		LocalDateTime horaInicial = LocalDateTime.now().plusHours(1);
+		LocalDateTime horaFinal = LocalDateTime.now().plusDays(1);
+		List<ServicoEnum> servicos = List.of(ServicoEnum.ASSISTENCIA_24H, ServicoEnum.LIMPEZA);
+
+		DadosReserva dadosReserva = new DadosReserva(horaInicial,horaFinal, idCliente,idVeiculo, servicos);
+
+		ResponseEntity<?> response = restTemplate.postForEntity("/reserva/cadastrar",
+				dadosReserva, Object.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertThat(response.getBody().toString()).contains("Para realizar uma reserva é obrigatório o cadastro completo da Carteira Nacional de Habilitação(CNH).");
+	}
+	
+	@Test
 	@DisplayName("Deve retornar 200 quando registrar retirada")
 	void cadastrarRetirada() {
 		Long idCliente = iniciarCliente();
@@ -377,6 +501,23 @@ public class ReservaControllerTest {
 	}
 	
 	@Test
+	@DisplayName("Deve retornar created quando cadastrado pagamento com valor menor com sucesso")
+	void cadastrarPagamentoValorMenorSucesso() {
+		Long idCliente = iniciarCliente();
+		Long idVeiculo = iniciarVeiculo();
+		Long idReserva = iniciarReserva(idCliente, idVeiculo);
+		
+		restTemplate.exchange( "/reserva/devolucao/" + idReserva, HttpMethod.PUT, null, Object.class);
+
+		DadosPagamento dadosPagamento = new DadosPagamento(140.00, FormaPagamentoEnum.CREDITO_A_VISTA, idReserva);
+		
+		ResponseEntity<?> response = restTemplate.postForEntity("/reserva/pagamento",
+				dadosPagamento, Object.class);
+
+		assertEquals(HttpStatus.CREATED, response.getStatusCode());
+	}
+	
+	@Test
 	@DisplayName("Deve retornar 400 quando ao cadastrar pagamento reserva não encontrada")
 	void cadastrarPagamentoReservaInexistente() {
 		DadosPagamento dadosPagamento = new DadosPagamento(1400.00, FormaPagamentoEnum.CREDITO_A_VISTA, 100L);
@@ -414,9 +555,34 @@ public class ReservaControllerTest {
 		Long idVeiculo = iniciarVeiculo();
 		
 		Long idReserva = iniciarReserva(idCliente, idVeiculo);
+		
+		restTemplate.exchange( "/reserva/devolucao/" + idReserva, HttpMethod.PUT, null, Object.class);
+		DadosPagamento dadosPagamento = new DadosPagamento(1400.00, FormaPagamentoEnum.CREDITO_A_VISTA, idReserva);
+		restTemplate.postForEntity("/reserva/pagamento", dadosPagamento, Object.class);
 
 		ResponseEntity<?> response = restTemplate.exchange(
 				"/reserva/finalizar?idReserva=" + idReserva +"&veiculoBoasCondicoes=true&quilomentragem=200000",
+				HttpMethod.PUT,
+				null,
+				Object.class);
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+	}
+	
+	@Test
+	@DisplayName("Deve retornar 200 ao finalizar reserva com veiculo em mas condicoes")
+	void finalizarVeiculoMasCondicoes() {
+		Long idCliente = iniciarCliente();
+		Long idVeiculo = iniciarVeiculo();
+		
+		Long idReserva = iniciarReserva(idCliente, idVeiculo);
+		
+		restTemplate.exchange( "/reserva/devolucao/" + idReserva, HttpMethod.PUT, null, Object.class);
+		DadosPagamento dadosPagamento = new DadosPagamento(1400.00, FormaPagamentoEnum.CREDITO_A_VISTA, idReserva);
+		restTemplate.postForEntity("/reserva/pagamento", dadosPagamento, Object.class);
+
+		ResponseEntity<?> response = restTemplate.exchange(
+				"/reserva/finalizar?idReserva=" + idReserva +"&veiculoBoasCondicoes=false&quilomentragem=200000",
 				HttpMethod.PUT,
 				null,
 				Object.class);
@@ -434,7 +600,7 @@ public class ReservaControllerTest {
 				Object.class);
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-		assertThat(response.getBody().toString()).contains("Reserva com id 1000 não encontrada");
+		assertThat(response.getBody().toString()).contains("Reserva com id 1000 encerrada não encontrada.");
 	}
 
 	@Test
@@ -445,6 +611,10 @@ public class ReservaControllerTest {
 		
 		Long idReserva = iniciarReserva(idCliente, idVeiculo);
 		
+		restTemplate.exchange( "/reserva/devolucao/" + idReserva, HttpMethod.PUT, null, Object.class);
+		DadosPagamento dadosPagamento = new DadosPagamento(1400.00, FormaPagamentoEnum.CREDITO_A_VISTA, idReserva);
+		restTemplate.postForEntity("/reserva/pagamento", dadosPagamento, Object.class);
+		
 		ResponseEntity<?> response = restTemplate.exchange(
 				"/reserva/finalizar?idReserva=" + idReserva + "&veiculoBoasCondicoes=true&quilomentragem=18000",
 				HttpMethod.PUT,
@@ -453,5 +623,51 @@ public class ReservaControllerTest {
 
 		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
 		assertThat(response.getBody().toString()).contains("A quilometragem não pode ser menor que a do início da reserva.");
+	}
+	
+	@Test
+	@DisplayName("Deve retornar 200 quando ao finalizar reserva estiver com status diferente de encerrado")
+	void finalizarReservaStatusDiferenteEncerrado() {
+		Long idCliente = iniciarCliente();
+		Long idVeiculo = iniciarVeiculo();
+		
+		Long idReserva = iniciarReserva(idCliente, idVeiculo);
+		
+		ResponseEntity<?> response = restTemplate.exchange(
+				"/reserva/finalizar?idReserva=" + idReserva + "&veiculoBoasCondicoes=true&quilomentragem=200000",
+				HttpMethod.PUT,
+				null,
+				Object.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertThat(response.getBody().toString()).contains("Reserva com id " + idReserva + " encerrada não encontrada.");
+	}
+	
+	@Test
+	@DisplayName("Deve retornar 200 quando listar reservas do cliente")
+	void listarReservasCliente() {
+		Long idCliente = iniciarCliente();
+		Long idVeiculo = iniciarVeiculo();
+		
+		iniciarReserva(idCliente, idVeiculo);
+		
+		ResponseEntity<?> response = restTemplate.getForEntity("/reserva/reservaCliente/" + idCliente
+				,Object.class);
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
+	}
+	
+	@Test
+	@DisplayName("Deve retornar 200 quando listar reservas do veiculo")
+	void listarReservasVeiculo() {
+		Long idCliente = iniciarCliente();
+		Long idVeiculo = iniciarVeiculo();
+		
+		iniciarReserva(idCliente, idVeiculo);
+		
+		ResponseEntity<?> response = restTemplate.getForEntity("/reserva/reservaVeiculo/" + idVeiculo
+				,Object.class);
+
+		assertEquals(HttpStatus.OK, response.getStatusCode());
 	}
 }

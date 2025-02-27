@@ -14,6 +14,7 @@ import br.com.fatec.easyDrive.DTO.funcionario.DadosFuncionario;
 import br.com.fatec.easyDrive.entity.Funcionario;
 import br.com.fatec.easyDrive.entity.Pessoa;
 import br.com.fatec.easyDrive.enumerator.StatusEnum;
+import br.com.fatec.easyDrive.exception.InvalidDataException;
 import br.com.fatec.easyDrive.exception.NotFoundException;
 import br.com.fatec.easyDrive.repository.FuncionarioRepository;
 
@@ -26,6 +27,8 @@ public class FuncionarioService {
 	private FuncionarioRepository funcionarioRepository;
 	
 	public DadosDetalhamentoFuncionario cadastrar(@Valid DadosFuncionario dados) {	
+		verificarFuncionarioJaCadastrado(dados);
+		
 		Pessoa pessoa = pessoaService.buscarPessoaPorId(dados.idPessoa());
 
 		Funcionario funcionario = new Funcionario();
@@ -83,5 +86,12 @@ public class FuncionarioService {
 		funcionarioRepository.save(funcionario);
 
 		return new DadosDetalhamentoFuncionario(funcionario);
+	}
+	
+	public void verificarFuncionarioJaCadastrado(DadosFuncionario dados) {
+		funcionarioRepository.findByIdPessoa(dados.idPessoa())
+		    .ifPresent(funcionario -> {
+		        throw new InvalidDataException("Funcionário já possui cadastro.");
+		    });
 	}
 }

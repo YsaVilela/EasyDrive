@@ -63,9 +63,8 @@ public class PessoaService {
 	}
 	
 	public Pessoa atualizar(@Valid DadosPessoa dados, Pessoa pessoa) {
-		validarCadastroPessoaJaCadastrada(dados, pessoa.getId());
+		validarAtualizacaoPessoaJaCadastrada(dados, pessoa.getId());
 		
-//		Pessoa pessoa = buscarPessoaPorId(idPessoa);
 		Endereco endereco = pessoa.getEndereco();
 				
 		endereco.setCep(dados.endereco().cep());
@@ -115,7 +114,7 @@ public class PessoaService {
 		    });
 	}
 	
-	public void validarCadastroPessoaJaCadastrada(DadosPessoa dados, Long idPessoa) {
+	public void validarAtualizacaoPessoaJaCadastrada(DadosPessoa dados, Long idPessoa) {
 		pessoaRepository.findByCpf(dados.cpf())
 		    .filter(c -> !c.getId().equals(idPessoa))
 		    .ifPresent(c -> { throw new InvalidDataException("CPF " + dados.cpf()  + " já cadastrado");});
@@ -123,6 +122,7 @@ public class PessoaService {
 		pessoaRepository.findByEmail(dados.email())
 		    .filter(c -> !c.getId().equals(idPessoa))
 		    .ifPresent(c -> { throw new InvalidDataException("Email " + dados.email()  + " já cadastrado");});
+		
 	}
 	
 }

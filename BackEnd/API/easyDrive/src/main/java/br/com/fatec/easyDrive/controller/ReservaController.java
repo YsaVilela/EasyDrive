@@ -3,9 +3,13 @@ package br.com.fatec.easyDrive.controller;
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
@@ -18,6 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
 import br.com.fatec.easyDrive.DTO.pagamento.DadosPagamento;
 import br.com.fatec.easyDrive.DTO.reserva.DadosDetalhamentoReserva;
 import br.com.fatec.easyDrive.DTO.reserva.DadosReserva;
+import br.com.fatec.easyDrive.DTO.reserva.DadosResumoReserva;
 import br.com.fatec.easyDrive.service.ReservaService;
 
 @RestController
@@ -65,5 +70,18 @@ public class ReservaController {
 		service.finalizar(idReserva, veiculoBoasCondicoes, quilomentragem);
 	}
 
+	@GetMapping("reservaCliente/{idCliente}")
+	public ResponseEntity<Page<DadosResumoReserva>> buscarReservaCliente (
+			@PageableDefault(size = 10) Pageable paginacao,
+			@PathVariable Long idCliente) {
+		return ResponseEntity.ok(service.buscarReservasCliente(idCliente, paginacao));
+	}
+	
+	@GetMapping("reservaVeiculo/{idVeiculo}")
+	public ResponseEntity<Page<DadosResumoReserva>> buscarReservaVeiculo (
+			@PageableDefault(size = 10) Pageable paginacao,
+			@PathVariable Long idVeiculo) {
+		return ResponseEntity.ok(service.buscarReservasVeiculo(idVeiculo, paginacao));
+	}
 
 }

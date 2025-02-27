@@ -1,5 +1,7 @@
 package br.com.fatec.easyDrive.repository;
 
+import java.util.Optional;
+
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -12,4 +14,6 @@ public interface VeiculoRepository extends JpaRepository<Veiculo, Long>{
 	@Modifying
 	@Query(value = "TRUNCATE TABLE tb_veiculo RESTART IDENTITY CASCADE", nativeQuery = true)
 	void deleteAllAndResetSequence();
+
+	Optional<Veiculo> findByPlaca(String placa);
 }

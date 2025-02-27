@@ -1,7 +1,10 @@
 package br.com.fatec.easyDrive.DTO.endereco;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import br.com.fatec.easyDrive.entity.Endereco;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record DadosDetalhamenteEndereco(
 		Long id,
 		String cep,

@@ -57,6 +57,14 @@ public class ClienteService {
 		return new DadosDetalhamentoCliente(cliente);
 	}
 	
+	public DadosDetalhamentoCliente buscarPorCpf(String cpf) {
+		Cliente cliente = clienteRepository.findByCpf(cpf).orElseThrow(() -> 
+			new NotFoundException("Cliente com cpf " + cpf + " não encontrado")
+		);
+
+		return new DadosDetalhamentoCliente(cliente);
+	}
+	
 	public Page<DadosDetalhamentoCliente> listarTodos(Pageable paginacao) {
 		return clienteRepository.findAll(paginacao).map(DadosDetalhamentoCliente::new);
 	}
@@ -117,18 +125,15 @@ public class ClienteService {
 	    
 		clienteRepository.findByNumeroCNH(dados.numeroCNH())
 			.ifPresent(cliente -> {
-				throw new InvalidDataException("Cliente já cadastrado com esse número de Carteira Nacional de Habilitação(CNH)");
+				throw new InvalidDataException("AA Cliente já cadastrado com esse número de Carteira Nacional de Habilitação(CNH)");
 			});
 	}
 	
 	public void verificarClienteJaCadastradoAtualizacao(DadosCliente dados, Long idCliente) {
-		clienteRepository.findByIdPessoa(dados.idPessoa())
-		    .filter(c -> !c.getId().equals(idCliente))
-		    .ifPresent(c -> { throw new InvalidDataException("Cliente já possui cadastro"); });
-		
 		clienteRepository.findByNumeroCNH(dados.numeroCNH())
 		    .filter(c -> !c.getId().equals(idCliente))
 		    .ifPresent(c -> { throw new InvalidDataException("Cliente já cadastrado com esse número de Carteira Nacional de Habilitação(CNH)"); });
+	
 	}
 	
 	public void atualizarPlano(Long pontuacao, Long idCliente) {

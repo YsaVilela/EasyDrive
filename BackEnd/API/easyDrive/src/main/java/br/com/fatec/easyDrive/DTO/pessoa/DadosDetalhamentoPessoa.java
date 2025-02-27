@@ -2,9 +2,12 @@ package br.com.fatec.easyDrive.DTO.pessoa;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import br.com.fatec.easyDrive.DTO.endereco.DadosDetalhamenteEndereco;
 import br.com.fatec.easyDrive.entity.Pessoa;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record DadosDetalhamentoPessoa(
 			Long id,
 			String nome,

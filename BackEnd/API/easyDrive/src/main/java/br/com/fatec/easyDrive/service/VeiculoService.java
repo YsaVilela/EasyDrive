@@ -27,7 +27,9 @@ public class VeiculoService {
 	@Autowired
 	private ReservaRepository reservaRepository;
 	
-	public DadosDetalhamentoVeiculo cadastrar(@Valid DadosVeiculo dados) {
+	public DadosDetalhamentoVeiculo cadastrar(DadosVeiculo dados) {
+		verificarVeiculoJaCadastrado(dados);
+		
 		Veiculo veiculo = new Veiculo();
 		veiculo.setPlaca(dados.placa());
 		veiculo.setModelo(dados.modelo());
@@ -53,20 +55,30 @@ public class VeiculoService {
 		return new DadosDetalhamentoVeiculo(veiculo);
 	}
 	
+	public DadosDetalhamentoVeiculo buscarPorPlaca(String placa) {
+		Veiculo veiculo = veiculoRepository.findByPlaca(placa).orElseThrow(() -> 
+			new NotFoundException("Veículo com palca " + placa + " não encontrado.")
+		);
+		
+		return new DadosDetalhamentoVeiculo(veiculo);
+	}
+	
 	public Page<DadosDetalhamentoVeiculo> listarTodos(Pageable paginacao) {
 		return veiculoRepository.findAll(paginacao).map(DadosDetalhamentoVeiculo::new);
 	}
 	
 	public DadosDetalhamentoVeiculo atualizar(@Valid DadosVeiculo dados, Long idVeiculo) {	
+		verificarVeiculoJaCadastradoAtualizacao(dados, idVeiculo);
+		
 		Veiculo veiculo = veiculoRepository.findById(idVeiculo).orElseThrow(() -> 
 			new NotFoundException("Veículo com id " + idVeiculo + " não encontrado")
 		);
 		
 		Optional<Reserva> reserva =  reservaRepository.findByVeiculoIdAndReservaStatus(idVeiculo, StatusEnum.EM_ANDAMENTO);
 		
-		if(reserva.isPresent()) {
-			new NotFoundException("Veículo " + idVeiculo + " não pode ser atualizado pois está presente em uma reserva ativa.");
-		}
+		reserva.ifPresent(r -> { 
+		    throw new NotFoundException("Veículo " + idVeiculo + " não pode ser atualizado pois está presente em uma reserva ativa."); 
+		});
 
 		veiculo.setPlaca(dados.placa());
 		veiculo.setModelo(dados.modelo());
@@ -128,5 +140,18 @@ public class VeiculoService {
 		
 		veiculo.setQuilometragem(quilometragem);
 		veiculoRepository.save(veiculo);
+	}
+	
+	public void verificarVeiculoJaCadastrado(DadosVeiculo dados) {
+		veiculoRepository.findByPlaca(dados.placa())
+		    .ifPresent(cliente -> {
+		        throw new InvalidDataException("Veiculo com placa " + dados.placa() + " já cadastrado");
+		    });
+	}
+	
+	public void verificarVeiculoJaCadastradoAtualizacao(DadosVeiculo dados, Long idVeiculo) {
+		veiculoRepository.findByPlaca(dados.placa())
+		    .filter(c -> !c.getId().equals(idVeiculo))
+		    .ifPresent(c -> { throw new InvalidDataException("Veiculo com placa " + dados.placa() + " já cadastrado"); });
 	}
 }

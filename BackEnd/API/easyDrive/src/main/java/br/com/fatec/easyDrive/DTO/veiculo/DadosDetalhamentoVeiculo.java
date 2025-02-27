@@ -1,8 +1,11 @@
 package br.com.fatec.easyDrive.DTO.veiculo;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
 import br.com.fatec.easyDrive.entity.Veiculo;
 import br.com.fatec.easyDrive.enumerator.TipoCombustivelEnum;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record DadosDetalhamentoVeiculo(
         Long id,
         String placa,

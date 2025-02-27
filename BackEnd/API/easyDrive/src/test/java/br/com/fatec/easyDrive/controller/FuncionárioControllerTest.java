@@ -1,5 +1,6 @@
 package br.com.fatec.easyDrive.controller;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 import java.time.LocalDate;
@@ -85,93 +86,21 @@ public class FuncionárioControllerTest {
 		assertEquals(HttpStatus.CREATED, response.getStatusCode());
 	}
 	
-//	@Test
-//	@DisplayName("Deve retornar 400 quando tentar cadastrar com idCidade inexistente")
-//	void criarFuncionarioComCidadeInexistente() {
-//		Long idPessoa = iniciarPessoa();
-//		
-//		DadosFuncionario dadosFuncionario = new DadosFuncionario(CargoEnum.ATENDENTE, idPessoa, null);
-//
-//		ResponseEntity<?> response =  restTemplate.postForEntity("/funcionario/cadastrar", 
-//				dadosFuncionario, Object.class);
-//
-//		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-//	}
+	@Test
+	@DisplayName("Deve retornar 400 quando tentar cadastrar com pessoa dupliciada")
+	void criarFuncionarioComPessoaJaCadastrada() {
+		Long idPessoa = iniciarPessoa();
 
-//	@Test
-//	@DisplayName("Deve retornar 400 quando tentar cadastrar com CPF ja cadastrado")
-//	void criarFuncionarioComCpfJaCadastrado() {
-//		iniciarFuncionario();
-//
-//		LocalDate dataDeNascimento = LocalDate.now().minusYears(20);
-//		LocalDate dataValidadeCNH = LocalDate.now().plusDays(20);
-//
-//		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 500000L);
-//		DadosPessoa dadosPessoa = new DadosPessoa("teste", "753.472.680-85", dataDeNascimento, "(11)12345-6789", "teste1@teste.com", dadosEndereco);
-//		DadosFuncionario dadosFuncionario = new DadosFuncionario(CargoEnum.ATENDENTE, dadosPessoa);
-//
-//		ResponseEntity<?> response =  restTemplate.postForEntity("/funcionario/cadastrar", 
-//				dadosFuncionario, Object.class);
-//
-//		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-//		assertThat(response.getBody().toString()).contains("Funcionário já cadastrado com esse cpf");
-//	}
-//
-//	@Test
-//	@DisplayName("Deve retornar 400 quando tentar cadastrar com email ja cadastrado")
-//	void criarFuncionarioComEmailJaCadastrado() {
-//		iniciarFuncionario();
-//
-//		LocalDate dataDeNascimento = LocalDate.now().minusYears(20);
-//		LocalDate dataValidadeCNH = LocalDate.now().plusDays(20);
-//
-//		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 500000L);
-//		DadosPessoa dadosPessoa = new DadosPessoa("teste", "389.498.600-07", dataDeNascimento, "(11)12345-6789", "teste@teste.com", dadosEndereco);
-//		DadosFuncionario dadosFuncionario = new DadosFuncionario(CargoEnum.ATENDENTE, dadosPessoa);
-//
-//		ResponseEntity<?> response =  restTemplate.postForEntity("/funcionario/cadastrar", 
-//				dadosFuncionario, Object.class);
-//		
-//		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-//		assertThat(response.getBody().toString()).contains("Funcionário já cadastrado com esse email");
-//	}
-//
-//	@Test
-//	@DisplayName("Deve retornar 400 quando tentar cadastrar com CPF invalido")
-//	void criarFuncionarioComCPFInvalidoDigitosIguais() {
-//		iniciarFuncionario();
-//
-//		LocalDate dataDeNascimento = LocalDate.now().minusYears(20);
-//
-//		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 500000L);
-//		DadosPessoa dadosPessoa = new DadosPessoa("teste", "111.111.111-11", dataDeNascimento, "(11)12345-6789", "teste1@teste.com", dadosEndereco);
-//		DadosFuncionario dadosFuncionario = new DadosFuncionario(CargoEnum.ATENDENTE, dadosPessoa);
-//
-//		ResponseEntity<?> response =  restTemplate.postForEntity("/funcionario/cadastrar", 
-//				dadosFuncionario, Object.class);
-//
-//		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-//		assertThat(response.getBody().toString()).contains("CPF Inválido");
-//	}
-//
-//	@Test
-//	@DisplayName("Deve retornar 400 quando tentar cadastrar com CPF invalido")
-//	void criarFuncionarioComCPFInvalido() {
-//		iniciarFuncionario();
-//
-//		LocalDate dataDeNascimento = LocalDate.now().minusYears(20);
-//		LocalDate dataValidadeCNH = LocalDate.now().plusDays(20);
-//
-//		DadosEndereco dadosEndereco = new DadosEndereco("00000-000", "teste rua", "2","Ap 1","bairro teste", 500000L);
-//		DadosPessoa dadosPessoa = new DadosPessoa("teste", "123.465.123-11", dataDeNascimento, "(11)12345-6789", "teste1@teste.com", dadosEndereco);
-//		DadosFuncionario dadosFuncionario = new DadosFuncionario(CargoEnum.ATENDENTE, dadosPessoa);
-//
-//		ResponseEntity<?> response =  restTemplate.postForEntity("/funcionario/cadastrar", 
-//				dadosFuncionario, Object.class);
-//
-//		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
-//		assertThat(response.getBody().toString()).contains("CPF Inválido");
-//	}
+		DadosFuncionario dadosFuncionario = new DadosFuncionario(CargoEnum.ATENDENTE, idPessoa, null);
+
+		restTemplate.postForEntity("/funcionario/cadastrar", dadosFuncionario, Object.class);
+
+		ResponseEntity<?> response = restTemplate.postForEntity("/funcionario/cadastrar",
+				dadosFuncionario, Object.class);
+
+		assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
+		assertThat(response.getBody().toString()).contains("Funcionário já possui cadastro.");
+	}
 
 	@Test
 	@DisplayName("Deve retornar 200 quando buscar funcionario existente")

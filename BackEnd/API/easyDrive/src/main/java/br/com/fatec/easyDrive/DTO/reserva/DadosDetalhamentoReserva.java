@@ -18,8 +18,10 @@ public record DadosDetalhamentoReserva(
 		LocalDateTime dataDevolucao,
 	    Double orcamento,
 	    Double orcamentoFinal,
+	    Double valorPago,
 	    DadosClienteReserva cliente,
 	    DadosDetalhamentoVeiculo veiculo,
+	    String status,
         List<DadosDatalhamentoServicoReserva> servicos
 	) {
 	
@@ -32,8 +34,10 @@ public record DadosDetalhamentoReserva(
 			reserva.getDataDevolucao(),
 			reserva.getOrcamento(),
 			reserva.getOrcamentoFinal(),
+			reserva.getValorPago(),
 			new DadosClienteReserva(reserva.getCliente()),
 			new DadosDetalhamentoVeiculo(reserva.getVeiculo()),
+			reserva.getStatus().getDescricao(),
 			servicos
 		);
 	}

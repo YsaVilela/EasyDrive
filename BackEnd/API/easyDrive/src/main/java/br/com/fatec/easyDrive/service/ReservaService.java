@@ -5,18 +5,22 @@ import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
 import jakarta.validation.Valid;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import br.com.fatec.easyDrive.DTO.pagamento.DadosPagamento;
 import br.com.fatec.easyDrive.DTO.reserva.DadosDatalhamentoServicoReserva;
 import br.com.fatec.easyDrive.DTO.reserva.DadosDetalhamentoReserva;
 import br.com.fatec.easyDrive.DTO.reserva.DadosReserva;
+import br.com.fatec.easyDrive.DTO.reserva.DadosResumoReserva;
 import br.com.fatec.easyDrive.entity.Cliente;
 import br.com.fatec.easyDrive.entity.Pagamento;
 import br.com.fatec.easyDrive.entity.Reserva;
@@ -76,6 +80,7 @@ public class ReservaService {
 		reserva.setOrcamentoFinal(aplicarDesconto(valorReserva, cliente));	
 		reserva.setCliente(cliente);
 		reserva.setVeiculo(veiculo);
+		reserva.setStatus(StatusEnum.ORCAMENTO);
 		
 		List<DadosDatalhamentoServicoReserva> servicos = dados.servicos().stream()
 			    .map(s -> {
@@ -183,7 +188,7 @@ public class ReservaService {
 		reserva.setValorPago(reserva.getValorPago() + dados.valor());
 		reservaRepository.save(reserva);
 		
-		if(reserva.getValorPago() == reserva.getValorFinal()) {
+		if(reserva.getValorPago().equals(reserva.getValorFinal())) {
 			reserva.setStatus(StatusEnum.ENCERRADO);
 			veiculoService.alterarStatus(reserva.getVeiculo(), StatusEnum.EM_ANALISE);
 			clienteService.atualizarPlano((long)(reserva.getOrcamentoFinal()/3), reserva.getCliente().getId());
@@ -195,8 +200,8 @@ public class ReservaService {
 	}
 	
 	public void finalizar(Long idReserva, Boolean veiculoBoasCondicoes, Long quilometragem) {
-		Reserva reserva = reservaRepository.findById(idReserva).orElseThrow(() -> 
-			new NotFoundException("Reserva com id " + idReserva + " não encontrada")
+		Reserva reserva = reservaRepository.findByReservaIdAndStatus(idReserva, StatusEnum.ENCERRADO).orElseThrow(() -> 
+			new NotFoundException("Reserva com id " + idReserva + " encerrada não encontrada.")
 		);
 		
 		StatusEnum status = veiculoBoasCondicoes ? StatusEnum.ATIVO : StatusEnum.EM_MANUTENCAO;
@@ -205,7 +210,23 @@ public class ReservaService {
 		reserva.setStatus(StatusEnum.FINALIZADO);
 	}
 	
+	public Page<DadosResumoReserva> buscarReservasCliente(Long idCliente, Pageable paginacao) {
+		Page<Reserva> reservas = reservaRepository.findAllByClienteId(idCliente, paginacao);
+		
+		return reservas.map(reserva -> new DadosResumoReserva(reserva));
+	}
+	
+	public Page<DadosResumoReserva> buscarReservasVeiculo(Long idVeiculo, Pageable paginacao) {
+		Page<Reserva> reservas = reservaRepository.findAllByVeiculoId(idVeiculo, paginacao);
+		
+		return reservas.map(reserva -> new DadosResumoReserva(reserva));
+	}
+	
 	public void validarCliente(Cliente cliente) {
+		if(Objects.isNull(cliente.getNumeroCNH()) || Objects.isNull(cliente.getValidadeCNH())) {
+			throw new InvalidDataException ("Para realizar uma reserva é obrigatório o cadastro completo da Carteira Nacional de Habilitação(CNH).");		
+		}
+		
 		if(cliente.getValidadeCNH().isBefore(LocalDate.now())) {
 			throw new InvalidDataException ("Não é possivel realizar uma reserva com a Carteira Nacional de Habilitação(CNH) vencida");		
 		}

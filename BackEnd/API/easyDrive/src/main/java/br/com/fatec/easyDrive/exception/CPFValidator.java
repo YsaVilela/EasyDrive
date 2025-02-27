@@ -12,7 +12,9 @@ public class CPFValidator implements ConstraintValidator<CPF, String> {
     }
 
     @Override
-    public boolean isValid(String cpf, ConstraintValidatorContext context) {
+    public boolean isValid(String cpfFormatado, ConstraintValidatorContext context) {
+    	String cpf = cpfFormatado.replaceAll("[.-]", "");
+    	
         if (cpf == null || !cpf.matches("\\d{11}")) {
             return false;
         }
