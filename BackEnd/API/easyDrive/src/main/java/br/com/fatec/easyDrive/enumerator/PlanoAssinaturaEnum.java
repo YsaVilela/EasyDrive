@@ -1,5 +1,8 @@
 package br.com.fatec.easyDrive.enumerator;
 
+import java.util.Arrays;
+import java.util.Comparator;
+
 public enum PlanoAssinaturaEnum {
 	ECONOMICO("Econômico", 0L, 0), 
 	EXECUTIVO("Executivo", 500L, 5),
@@ -26,6 +29,13 @@ public enum PlanoAssinaturaEnum {
 
 	public Integer getDesconto() {
 		return desconto;
+	}
+	
+	public static PlanoAssinaturaEnum getPlanoPorPontuacao(Long pontuacao) {
+	    return Arrays.stream(PlanoAssinaturaEnum.values())
+	    		.filter(plano -> pontuacao >= plano.getPontuacaoMinima())  
+	            .max(Comparator.comparingLong(PlanoAssinaturaEnum::getPontuacaoMinima)) 
+	            .orElse(null);  
 	}
 
 }

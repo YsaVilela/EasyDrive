@@ -11,7 +11,9 @@ public enum StatusEnum {
 	EM_ANDAMENTO("Em andamento"),
 	ENCERRADO("Encerrado"),
 	AGUARDANDO_PAGAMENTO("Aguardando Pagamento"),
-	APROVADO("Aprovado");
+	APROVADO("Aprovado"),
+	ORCAMENTO("Oraçamento"),
+	EM_MANUTENCAO("Em manutenção");
 
 	private String descricao;
 

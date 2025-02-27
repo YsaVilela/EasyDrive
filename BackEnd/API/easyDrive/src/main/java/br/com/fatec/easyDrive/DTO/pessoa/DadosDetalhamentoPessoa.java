@@ -2,40 +2,33 @@ package br.com.fatec.easyDrive.DTO.pessoa;
 
 import java.time.LocalDate;
 
+import com.fasterxml.jackson.annotation.JsonInclude;
+
+import br.com.fatec.easyDrive.DTO.endereco.DadosDetalhamenteEndereco;
 import br.com.fatec.easyDrive.entity.Pessoa;
 
+@JsonInclude(JsonInclude.Include.NON_NULL)
 public record DadosDetalhamentoPessoa(
+			Long id,
 			String nome,
 			String cpf,
 			LocalDate dataDeNascimento,
 			String telefone,
 			String email,
 			LocalDate dataCadastro,
-			String cep,
-			String logradouro,
-			String numero,
-			String complemento,
-			String bairro,
-			String nomeCidade,
-			String nomeEstado,
-			String siglaUF
+			DadosDetalhamenteEndereco endereco
+
 		) {
 	public DadosDetalhamentoPessoa (Pessoa pessoa) {
 		this(
+			pessoa.getId(),
 			pessoa.getNome(),
 			pessoa.getCpf(),
 			pessoa.getDataDeNascimento(),
 			pessoa.getTelefone(),
 			pessoa.getEmail(),
 			pessoa.getDataCadastro(),
-			pessoa.getEndereco().getCep(),
-			pessoa.getEndereco().getLogradouro(),
-			pessoa.getEndereco().getNumero(),
-			pessoa.getEndereco().getComplemento(),
-			pessoa.getEndereco().getBairro(),
-			pessoa.getEndereco().getCidade().getNome(),
-			pessoa.getEndereco().getCidade().getEstado().getNome(),
-			pessoa.getEndereco().getCidade().getEstado().getSigla()
+			new DadosDetalhamenteEndereco(pessoa.getEndereco())
 		);
 	}
 

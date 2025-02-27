@@ -19,16 +19,13 @@ public record DadosReserva(
     @NotNull(message = "Data prevista para o fim da reserva é obrigatório")
 	@FutureOrPresent(message = "A data final da reserva não pode ser passada")
     @JsonFormat(pattern = "dd/MM/yyyy HH:mm")    
-	LocalDateTime dataPrevistaFim,
+	LocalDateTime dataFim,
 
     @NotNull(message = "ID do Cliente é obrigatório")
     Long fkCliente,
 
     @NotNull(message = "ID do Veículo é obrigatório")
     Long fkVeiculo,
-    
-    @NotNull(message = "Indicar se há orçamento prévio é obrigatório")
-    boolean orcamentoPrevio,
     
     List<ServicoEnum> servicos
 ) {

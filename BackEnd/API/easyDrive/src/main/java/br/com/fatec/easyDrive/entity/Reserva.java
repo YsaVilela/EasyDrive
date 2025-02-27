@@ -2,7 +2,6 @@ package br.com.fatec.easyDrive.entity;
 
 import java.time.LocalDateTime;
 
-import br.com.fatec.easyDrive.enumerator.StatusEnum;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -13,8 +12,11 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+
 import lombok.Getter;
 import lombok.Setter;
+
+import br.com.fatec.easyDrive.enumerator.StatusEnum;
 
 @Entity
 @Table(name = "tb_reserva")
@@ -30,11 +32,14 @@ public class Reserva {
     @Column(name = "data_inicio")
     private LocalDateTime dataInicio;
     
-    @Column(name = "data_prevista_fim")
-    private LocalDateTime dataPrevistaFim;
+    @Column(name = "data_retirada")
+    private LocalDateTime dataRetirada;
 
     @Column(name = "data_fim")
     private LocalDateTime dataFim;
+    
+    @Column(name = "data_devolucao")
+    private LocalDateTime dataDevolucao;
 
     @Column(name = "orcamento")
     private Double orcamento;

@@ -4,6 +4,8 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -26,7 +28,10 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long>{
 	List<Reserva> findByVeiculoId(@Param("idVeiculo") Long idVeiculo);
 	
 	@Query("SELECT r FROM Reserva r WHERE r.veiculo.id = :idVeiculo AND r.status = :status")
-	Optional<Reserva> findByVeiculoIdAndReservaStatus(@Param("idVeiculo") Long idVeiculo, @Param("status") String status);
+	Optional<Reserva> findByVeiculoIdAndReservaStatus(@Param("idVeiculo") Long idVeiculo, @Param("status") StatusEnum status);
+	
+	@Query("SELECT r FROM Reserva r WHERE r.id = :idReserva AND r.status = :status")
+	Optional<Reserva> findByReservaIdAndStatus(@Param("idReserva") Long idReserva, @Param("status") StatusEnum status);
 	
 	@Query("SELECT r FROM Reserva r WHERE r.cliente.id = :idCliente AND r.status = :status")
 	Optional<Reserva> findByClienteIdAndReservaStatus(
@@ -49,4 +54,8 @@ public interface ReservaRepository extends JpaRepository<Reserva, Long>{
 	    @Param("dataInicio") LocalDateTime dataInicio,
 	    @Param("dataFim") LocalDateTime dataFim
 	);
+
+	Page<Reserva> findAllByClienteId(Long idCliente, Pageable paginacao);
+
+	Page<Reserva> findAllByVeiculoId(Long idVeiculo, Pageable paginacao);
 }

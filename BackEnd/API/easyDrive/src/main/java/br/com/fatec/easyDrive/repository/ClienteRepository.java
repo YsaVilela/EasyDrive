@@ -17,11 +17,11 @@ public interface ClienteRepository extends JpaRepository<Cliente, Long>{
 	void deleteAllAndResetSequence();
 
 	@Query("SELECT c FROM Cliente c WHERE c.pessoa.cpf = :cpf")
-	Optional<Cliente> getByCpf(@Param("cpf") String cpf);
+	Optional<Cliente> findByCpf(@Param("cpf") String cpf);
 
-	@Query("SELECT c FROM Cliente c WHERE c.pessoa.email = :email")
-	Optional<Cliente> getByEmail(@Param("email") String email);
+	Optional<Cliente> findByNumeroCNH(@Param("numeroCNH") String numeroCNH);
 
-	Optional<Cliente> getByNumeroCNH(@Param("numeroCNH") String numeroCNH);
+	@Query("SELECT c FROM Cliente c WHERE c.pessoa.id = :idPessoa")
+	Optional<Cliente> findByIdPessoa(@Param("idPessoa")Long idPessoa);
 
 }

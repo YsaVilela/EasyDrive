@@ -1,0 +1,805 @@
+{
+	"info": {
+		"_postman_id": "240eb33b-01c8-4fa9-98fa-e9ef412d85df",
+		"name": "EasyDrive 1.0",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "29072219"
+	},
+	"item": [
+		{
+			"name": "Pessoa",
+			"item": [
+				{
+					"name": "Cadastrar Pessoa",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"nome\": \"teste 1\",\n    \"cpf\": \"606.700.700-25\",\n    \"dataDeNascimento\": \"10/02/2000\",\n    \"telefone\": \"(11)12345-6789\",\n    \"email\": \"teste2@teste.com\",\n    \"endereco\": {\n        \"cep\": \"00000-000\",\n        \"logradouro\": \"teste rua\",\n        \"numero\": \"2\",\n        \"complemento\": \"Ap 1\",\n        \"bairro\": \"bairro teste\",\n        \"fkCidade\": 1\n    }\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/pessoa/cadastrar",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"pessoa",
+								"cadastrar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar por CPF",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/pessoa/buscarCPF/606.700.700-25",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"pessoa",
+								"buscarCPF",
+								"606.700.700-25"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Cliente",
+			"item": [
+				{
+					"name": "Cadastrar Cliente",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    // \"numeroCNH\": \"123456721\",\r\n    // \"validadeCNH\": \"20/02/2020\",\r\n    \"idPessoa\": 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/cliente/cadastrar",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"cliente",
+								"cadastrar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Cliente por Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/cliente/buscarId/3",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"cliente",
+								"buscarId",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Cliente por CPF",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/cliente/buscarCpf/606.700.700-25",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"cliente",
+								"buscarCpf",
+								"606.700.700-25"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Todos Clientes",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/cliente/listarTodos",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"cliente",
+								"listarTodos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Cliente",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"numeroCNH\": \"123456788\",\r\n    \"validadeCNH\": \"10/02/2026\",\r\n    \"pessoa\": {\r\n        \"nome\": \"teste 1\",\r\n        \"cpf\": \"753.472.680-85\",\r\n        \"dataDeNascimento\": \"10/02/2025\",\r\n        \"telefone\": \"(11)12345-6789\",\r\n        \"email\": \"teste1@teste.com\",\r\n        \"endereco\": {\r\n            \"cep\": \"00000-000\",\r\n            \"logradouro\": \"teste rua\",\r\n            \"numero\": \"2\",\r\n            \"fkCidade\": 1\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/cliente/atualizar/3",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"cliente",
+								"atualizar",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Suspender Cliente",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/cliente/suspender/3",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"cliente",
+								"suspender",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ativar Cliente",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/cliente/ativar/3",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"cliente",
+								"ativar",
+								"3"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deletar Cliente",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/cliente/deletar/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"cliente",
+								"deletar",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Funcionário",
+			"item": [
+				{
+					"name": "Cadastrar Funcionário",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cargo\": \"ATENDENTE\",\r\n    \"idPessoa\": 4\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/funcionario/cadastrar",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"funcionario",
+								"cadastrar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Funcionário por Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/funcionario/buscarId/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"funcionario",
+								"buscarId",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Todos Funcionários",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/funcionario/listarTodos",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"funcionario",
+								"listarTodos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Funcionário",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"cargo\": \"ATENDENTE\",\r\n    \"pessoa\": {\r\n        \"nome\": \"teste 1\",\r\n        \"cpf\": \"408.460.860-26\",\r\n        \"dataDeNascimento\": \"10/02/2025\",\r\n        \"telefone\": \"(11)12345-6789\",\r\n        \"email\": \"teste5@teste.com\",\r\n        \"endereco\": {\r\n            \"cep\": \"00000-000\",\r\n            \"logradouro\": \"teste rua\",\r\n            \"numero\": \"2\",\r\n            \"complemento\": \"Ap 1\",\r\n            \"bairro\": \"bairro teste\",\r\n            \"fkCidade\": 1\r\n        }\r\n    }\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/funcionario/atualizar/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"funcionario",
+								"atualizar",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Suspender Funcionário",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/funcionario/suspender/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"funcionario",
+								"suspender",
+								"1"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ativar Funcionário",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/funcionario/ativar/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"funcionario",
+								"ativar",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Reserva",
+			"item": [
+				{
+					"name": "Gerar Orçamento",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dataInicio\": \"14/03/2025 14:47\",\r\n    \"dataFim\": \"17/03/2025 14:47\",\r\n    \"fkCliente\": 3,\r\n    \"fkVeiculo\": 1,\r\n    \"servicos\": [\r\n        \"LIMPEZA\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/reserva/gerarOrcamento",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"reserva",
+								"gerarOrcamento"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastrar Reserva",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dataInicio\": \"14/03/2025 14:47\",\r\n    \"dataFim\": \"17/03/2025 14:47\",\r\n    \"fkCliente\": 2,\r\n    \"fkVeiculo\": 2,\r\n    \"servicos\": [\r\n        \"LIMPEZA\"\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/reserva/cadastrar",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"reserva",
+								"cadastrar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar Retirada",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dataInicio\": \"26/02/2025 14:48\",\r\n    \"dataFim\": \"27/02/2025 14:47\",\r\n    \"fkCliente\": 1,\r\n    \"fkVeiculo\": 1,\r\n    \"servicos\": [\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/reserva/retirada/2",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"reserva",
+								"retirada",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Registrar Devolução",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dataInicio\": \"26/02/2025 14:48\",\r\n    \"dataFim\": \"27/02/2025 14:47\",\r\n    \"fkCliente\": 1,\r\n    \"fkVeiculo\": 1,\r\n    \"servicos\": [\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/reserva/devolucao/2",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"reserva",
+								"devolucao",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Cadastrar Pagamento",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"valor\": 10.00,\r\n    \"formaPagamento\": \"CREDITO_A_VISTA\",\r\n    \"idReserva\": 2\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/reserva/pagamento",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"reserva",
+								"pagamento"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Finalizar Reserva",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"dataInicio\": \"26/02/2025 14:48\",\r\n    \"dataFim\": \"27/02/2025 14:47\",\r\n    \"fkCliente\": 1,\r\n    \"fkVeiculo\": 1,\r\n    \"servicos\": [\r\n    ]\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/reserva/finalizar?idReserva=2&veiculoBoasCondicoes=true&quilomentragem=1000000",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"reserva",
+								"finalizar"
+							],
+							"query": [
+								{
+									"key": "idReserva",
+									"value": "2"
+								},
+								{
+									"key": "veiculoBoasCondicoes",
+									"value": "true"
+								},
+								{
+									"key": "quilomentragem",
+									"value": "1000000"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Reserva Por Cliente",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/reserva/reservaCliente/2",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"reserva",
+								"reservaCliente",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Reserva Por Veiculo",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/reserva/reservaVeiculo/2",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"reserva",
+								"reservaVeiculo",
+								"2"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Veículo",
+			"item": [
+				{
+					"name": "Cadastrar Veiculo",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"placa\": \"abc-6\",\r\n    \"modelo\": \"etios\",\r\n    \"marca\": \"toyota\",\r\n    \"ano\": 2018,\r\n    \"quilometragem\": 180000,\r\n    \"categoria\": \"SUV\",\r\n    \"cor\": \"preto\",\r\n    \"tipoCombustivel\": \"F\",\r\n    \"valorDiaria\": 100.00\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/veiculo/cadastrar",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"veiculo",
+								"cadastrar"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Veiculo por Id",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/veiculo/buscarId/2",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"veiculo",
+								"buscarId",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Buscar Veiculo por Placa",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/veiculo/buscarPlaca/abc-6",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"veiculo",
+								"buscarPlaca",
+								"abc-6"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Todos Veiculos",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/veiculo/listarTodos",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"veiculo",
+								"listarTodos"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Atualizar Veiculo",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"placa\": \"abc-0976\",\r\n    \"modelo\": \"etios\",\r\n    \"marca\": \"toyota\",\r\n    \"ano\": 2018,\r\n    \"quilometragem\": 180000,\r\n    \"categoria\": \"SUV\",\r\n    \"cor\": \"preto\",\r\n    \"tipoCombustivel\": \"F\",\r\n    \"valorDiaria\": 100.00\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{local}}/veiculo/atualizar/2",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"veiculo",
+								"atualizar",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Suspender Veiculo",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/veiculo/suspender/2",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"veiculo",
+								"suspender",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Ativar Veiculo",
+					"request": {
+						"method": "PUT",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/veiculo/ativar/2",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"veiculo",
+								"ativar",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deletar Veiculo",
+					"request": {
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/veiculo/deletar/1",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"veiculo",
+								"deletar",
+								"1"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Dominios",
+			"item": [
+				{
+					"name": "Listar Cidades Por Estado",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/dominio/cidades/2",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"dominio",
+								"cidades",
+								"2"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Listar Estados",
+					"request": {
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{local}}/dominio/estados",
+							"host": [
+								"{{local}}"
+							],
+							"path": [
+								"dominio",
+								"estados"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

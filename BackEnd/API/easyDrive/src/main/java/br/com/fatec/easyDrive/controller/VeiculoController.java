@@ -40,6 +40,11 @@ public class VeiculoController {
 		return ResponseEntity.ok(service.buscarPorId(id));
 	}
 	
+	@GetMapping("/buscarPlaca/{placa}")
+	public ResponseEntity<DadosDetalhamentoVeiculo> buscarPlaca(@PathVariable String placa) {
+		return ResponseEntity.ok(service.buscarPorPlaca(placa));
+	}
+	
 	@GetMapping("listarTodos")
 	public ResponseEntity<Page<DadosDetalhamentoVeiculo>> listarTodos(
 			@PageableDefault(size = 10) Pageable paginacao) {

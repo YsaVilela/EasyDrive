@@ -13,13 +13,19 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Table(name = "tb_cliente")
 @Entity (name = "Cliente")
 @Getter
 @Setter
+@Builder
+@NoArgsConstructor
+@AllArgsConstructor
 public class Cliente {
 	@Id  @GeneratedValue(strategy = GenerationType.IDENTITY)
 	@Column(name = "id") 
@@ -39,6 +45,9 @@ public class Cliente {
 	
 	@Column(name = "status") 
 	private StatusEnum status;
+	
+	@Column(name = "data_cadastro") 
+	private LocalDate dataCadastro;
 	
 	@ManyToOne(cascade = CascadeType.REMOVE)
 	@JoinColumn(name = "fk_pessoa")

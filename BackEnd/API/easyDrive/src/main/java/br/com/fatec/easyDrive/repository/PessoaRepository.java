@@ -15,6 +15,8 @@ public interface PessoaRepository extends JpaRepository<Pessoa, Long>{
 	@Query(value = "TRUNCATE TABLE tb_pessoa RESTART IDENTITY CASCADE", nativeQuery = true)
 	void deleteAllAndResetSequence();
 
-	Optional<Pessoa> getByCpf(String cpf);
+	Optional<Pessoa> findByCpf(String cpf);
 
+	Optional<Pessoa> findByEmail(String email);
+ 
 }

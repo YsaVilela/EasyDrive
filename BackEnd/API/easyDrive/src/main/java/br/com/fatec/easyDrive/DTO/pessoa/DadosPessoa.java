@@ -5,6 +5,8 @@ import java.time.LocalDate;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import br.com.fatec.easyDrive.DTO.endereco.DadosEndereco;
+import br.com.fatec.easyDrive.exception.anotations.CPF;
+
 import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.PastOrPresent;
@@ -14,7 +16,8 @@ public record DadosPessoa(
 		@NotBlank (message = "Nome é obrigatório") 
 		String nome,
 		
-		@Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$", message = "Cpf inválido")
+		@Pattern(regexp = "^\\d{3}\\.\\d{3}\\.\\d{3}-\\d{2}$", message = "Formatação inválida, utilize xxx.xxx.xxx-xx")
+		@CPF
 		String cpf,
 		
 	    @PastOrPresent(message = "A data de nascimento não pode ser uma data futura")
